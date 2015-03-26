@@ -1,10 +1,10 @@
 language: java
 env:
   global:
-  - secure: "ZCGDifklmwwL/w6cvcpcpWHr7xVTB6AAFir+60z4FGcfvrNoRPVvGLzbhkgAd8albwg7lkgp4auoot/tMHfSkbqiJ3NDLZxu1pSaIUiSNQOw9tkKrJPkRiaiObwkBXPVrIf2Dq+Gxi43+QVRB0FkyHHeLuiiOalI894zR6L4LRw=""
-  - secure: "Y/tLJV0oJf490f1ZvfjrU7MV+nnkQ70+0fLwwr/iUsvxX7rBi1isXfN+fCaJMmXxAMEk3SYRyJ4Hu+ulh51b0BqC2cg5TISF69D1STrNrgeEeXm2ucBvZhIidRA6adnZNgPPFNA0DY+dejuzglKpSI72p10IBnL++FLsjTNp5js="
+  - secure: ZCGDifklmwwL/w6cvcpcpWHr7xVTB6AAFir+60z4FGcfvrNoRPVvGLzbhkgAd8albwg7lkgp4auoot/tMHfSkbqiJ3NDLZxu1pSaIUiSNQOw9tkKrJPkRiaiObwkBXPVrIf2Dq+Gxi43+QVRB0FkyHHeLuiiOalI894zR6L4LRw=
+  - secure: Y/tLJV0oJf490f1ZvfjrU7MV+nnkQ70+0fLwwr/iUsvxX7rBi1isXfN+fCaJMmXxAMEk3SYRyJ4Hu+ulh51b0BqC2cg5TISF69D1STrNrgeEeXm2ucBvZhIidRA6adnZNgPPFNA0DY+dejuzglKpSI72p10IBnL++FLsjTNp5js=
 after_success:
 - mvn deploy --settings settings.xml
 notifications:
   slack:
-    secure: "Ft5aM0WPMhw29qSJ+YoSFa0z4Aq+jlmRev+Z6d0EElc9kwhAH8zLlPq0BiSmfM/IdxiQ0VGCOqOc7BsnVr65GD0H7yrGjoG2f9RCHU0xOiLSqelE33t1AC+e1R6Rkr+EgvAX8zG1+I4DyCJBvkFQnA8Qr+wbYwFiQEVP2ZOaWzY="
+    secure: Ft5aM0WPMhw29qSJ+YoSFa0z4Aq+jlmRev+Z6d0EElc9kwhAH8zLlPq0BiSmfM/IdxiQ0VGCOqOc7BsnVr65GD0H7yrGjoG2f9RCHU0xOiLSqelE33t1AC+e1R6Rkr+EgvAX8zG1+I4DyCJBvkFQnA8Qr+wbYwFiQEVP2ZOaWzY=
