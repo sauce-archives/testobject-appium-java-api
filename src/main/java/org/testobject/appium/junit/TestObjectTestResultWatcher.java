@@ -4,6 +4,7 @@ import io.appium.java_client.AppiumDriver;
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.remote.SessionId;
 import org.testobject.appium.common.AppiumResource;
 
@@ -45,6 +46,15 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	}
 
 	private void reportPassed(boolean passed) {
+		if (appiumDriver == null) {
+			throw new IllegalStateException("appium driver must be set using setAppiumDriver method");
+		}
+
+		if (passed == false) {
+			appiumDriver.getPageSource();
+			appiumDriver.getScreenshotAs(OutputType.FILE);
+		}
+
 		URL appiumRemoteAddress = appiumDriver.getRemoteAddress();
 		if (toAppiumEndpointURL(baseUrl).equals(appiumRemoteAddress) == false) {
 			return;
