@@ -12,6 +12,8 @@ import javax.ws.rs.core.MediaType;
 import java.io.Closeable;
 import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class AppiumResource implements Closeable{
 
@@ -44,6 +46,14 @@ public class AppiumResource implements Closeable{
 
 	public void updateTestReportStatus(boolean passed){
 		baseResource.path("test").type(MediaType.APPLICATION_JSON_TYPE).put(Collections.singletonMap("passed", passed));
+	}
+
+	public void updateTestReportName(String suiteName, String testName){
+		Map<String, String> values = new HashMap<String, String>();
+		values.put("suiteName", suiteName);
+		values.put("testName", testName);
+
+		baseResource.path("test").type(MediaType.APPLICATION_JSON_TYPE).put(Collections.singletonMap("passed", values));
 	}
 
 	public void close() {
