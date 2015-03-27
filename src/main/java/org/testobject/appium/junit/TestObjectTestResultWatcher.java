@@ -1,15 +1,15 @@
 package org.testobject.appium.junit;
 
 import io.appium.java_client.AppiumDriver;
+import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.remote.SessionId;
 import org.testobject.appium.common.AppiumResource;
-import org.testobject.appium.common.TestObjectCapabilities;
 
-import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
-import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
-import static org.testobject.appium.common.TestObjectCapabilities.toAppiumEndpointURL;
+import java.net.URL;
+
+import static org.testobject.appium.common.TestObjectCapabilities.*;
 
 public class TestObjectTestResultWatcher extends TestWatcher {
 
@@ -32,8 +32,21 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		this.reportPassed(false);
 	}
 
+	@Override protected void skipped(AssumptionViolatedException e, Description description) {
+		this.reportPassed(false);
+	}
+
+	@Override protected void finished(Description description) {
+		if (appiumDriver == null) {
+			return;
+		}
+
+		appiumDriver.quit();
+	}
+
 	private void reportPassed(boolean passed) {
-		if (toAppiumEndpointURL(baseUrl).equals(appiumDriver.getRemoteAddress()) == false) {
+		URL appiumRemoteAddress = appiumDriver.getRemoteAddress();
+		if (toAppiumEndpointURL(baseUrl).equals(appiumRemoteAddress) == false) {
 			return;
 		}
 
@@ -56,6 +69,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		if (appiumDriver == null) {
 			throw new IllegalArgumentException("appiumDriver must not be null");
 		}
+
 		this.appiumDriver = appiumDriver;
 	}
 }
