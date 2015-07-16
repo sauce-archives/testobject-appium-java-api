@@ -9,9 +9,9 @@ import org.junit.runners.Suite;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerScheduler;
-import org.testobject.appium.common.AppiumBatchReportResource;
+import org.testobject.appium.common.AppiumSuiteReportResource;
 import org.testobject.appium.common.TestObject;
-import org.testobject.appium.common.data.BatchReport;
+import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.internal.RestClient;
 import org.testobject.appium.junit.internal.Test;
 
@@ -42,7 +42,7 @@ public class TestObjectAppiumSuite extends Suite {
             for (TestRule testRule : testRules) {
                 if(testRule instanceof TestObjectTestResultWatcher){
                     TestObjectTestResultWatcher resultWatcher = (TestObjectTestResultWatcher) testRule;
-                    resultWatcher.configureForBatchReplay(device, config.testObjectBatchId(),  batchReport);
+                    resultWatcher.configureForBatchReplay(device, config.testObjectBatchId(), suiteReport);
                 }
             }
 
@@ -89,7 +89,7 @@ public class TestObjectAppiumSuite extends Suite {
     private final TestObject config;
     private final List<Runner> perDeviceRunners;
 
-    private BatchReport batchReport;
+    private SuiteReport suiteReport;
 
     public TestObjectAppiumSuite(Class<?> clazz) throws InitializationError {
         super(clazz, NO_RUNNERS);
@@ -119,12 +119,12 @@ public class TestObjectAppiumSuite extends Suite {
 
         RestClient client = RestClient.Factory.createClient(config.baseUrl(), config.testObjectApiKey());
         try{
-            AppiumBatchReportResource batchReportResource = new AppiumBatchReportResource(client);
-            this.batchReport = batchReportResource.startBatchReport(config.testObjectBatchId(), tests);
+            AppiumSuiteReportResource batchReportResource = new AppiumSuiteReportResource(client);
+            this.suiteReport = batchReportResource.startSuiteReport(config.testObjectBatchId(), tests);
             try {
                 super.run(notifier);
             } finally {
-                batchReportResource.finishBatchReport(config.testObjectBatchId(), batchReport.getId());
+                batchReportResource.finishBatchReport(config.testObjectBatchId(), suiteReport.getId());
             }
         } finally {
             client.close();

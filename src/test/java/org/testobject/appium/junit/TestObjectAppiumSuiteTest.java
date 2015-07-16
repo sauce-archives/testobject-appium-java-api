@@ -20,9 +20,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
 
-/**
- * Created by aluedeke on 12.06.15.
- */
 public class TestObjectAppiumSuiteTest {
 
     @Rule

@@ -6,9 +6,9 @@ import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.OutputType;
-import org.testobject.appium.common.AppiumBatchReportResource;
+import org.testobject.appium.common.AppiumSuiteReportResource;
 import org.testobject.appium.common.AppiumResource;
-import org.testobject.appium.common.data.BatchReport;
+import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.common.data.TestReport;
 import org.testobject.appium.common.data.TestResult;
 import org.testobject.appium.internal.RestClient;
@@ -29,7 +29,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	private String device;
 
 	private long batchId;
-	private BatchReport batchReport;
+	private SuiteReport suiteReport;
 
 	public TestObjectTestResultWatcher() {
 		this(TESTOBJECT_API_ENDPOINT);
@@ -84,20 +84,20 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 			return;
 		}
 
-		if(batchReport == null){
+		if(suiteReport == null){
 			createBatchReportAndTestReport(passed);
 		} else {
-			updateBatchReport(batchReport, Test.from(description), passed);
+			updateBatchReport(suiteReport, Test.from(description), passed);
 		}
 	}
 
-	private void updateBatchReport(BatchReport batchReport, Test test, boolean passed) {
-		Optional<TestReport.Id> testReportId = batchReport.geTestReportId(test);
+	private void updateBatchReport(SuiteReport suiteReport, Test test, boolean passed) {
+		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
 		if(testReportId.isPresent() == false){
 			throw new IllegalArgumentException("unknown test " + test);
 		}
 
-		new AppiumBatchReportResource(client).updateTestReport(batchId, batchReport.getId(), testReportId.get(), new TestResult(passed));
+		new AppiumSuiteReportResource(client).updateTestReport(batchId, suiteReport.getId(), testReportId.get(), new TestResult(passed));
 	}
 
 	private void createBatchReportAndTestReport(boolean passed) {
@@ -114,10 +114,10 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		this.client = RestClient.Factory.createClient(baseUrl, (String) appiumDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY));
 	}
 
-	public void configureForBatchReplay(String device, long batchId, BatchReport batchReport) {
+	public void configureForBatchReplay(String device, long batchId, SuiteReport suiteReport) {
 		this.device = device;
 		this.batchId = batchId;
-		this.batchReport = batchReport;
+		this.suiteReport = suiteReport;
 	}
 
 }

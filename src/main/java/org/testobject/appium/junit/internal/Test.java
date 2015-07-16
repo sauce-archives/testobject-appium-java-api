@@ -1,10 +1,8 @@
 package org.testobject.appium.junit.internal;
 
-
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.junit.runner.Description;
-import org.testobject.appium.junit.TestObjectAppiumSuite;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
