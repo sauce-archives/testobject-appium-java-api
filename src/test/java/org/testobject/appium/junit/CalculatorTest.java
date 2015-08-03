@@ -1,28 +1,20 @@
 package org.testobject.appium.junit;
 
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileBy;
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.pagefactory.AndroidFindBy;
-import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.testobject.appium.common.TestObject;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
-@TestObject(baseUrl = "http://127.0.0.1:8989/api", testObjectApiKey = "", testObjectBatchId = 1, devices = {"device1", "device2"})
+@TestObject(baseUrl = "http://127.0.0.1:8989/api", testObjectApiKey = "", testObjectSuiteId = 1, devices = {"device1", "device2"})
 @RunWith(TestObjectAppiumSuite.class)
 public class CalculatorTest {
 

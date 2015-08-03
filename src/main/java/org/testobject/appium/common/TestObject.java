@@ -14,7 +14,7 @@ public @interface TestObject {
 
     String testObjectApiKey();
 
-    long testObjectBatchId();
+    long testObjectSuiteId();
 
     String[] devices();
 

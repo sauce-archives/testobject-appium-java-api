@@ -28,7 +28,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	private String device;
 
-	private long batchId;
+	private long suiteId;
 	private SuiteReport suiteReport;
 
 	public TestObjectTestResultWatcher() {
@@ -84,23 +84,23 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 			return;
 		}
 
-		if(suiteReport == null){
-			createBatchReportAndTestReport(passed);
+		if (suiteReport == null){
+			createSuiteReportAndTestReport(passed);
 		} else {
-			updateBatchReport(suiteReport, Test.from(description), passed);
+			updateSuiteReport(suiteReport, Test.from(description), passed);
 		}
 	}
 
-	private void updateBatchReport(SuiteReport suiteReport, Test test, boolean passed) {
+	private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
 		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
 		if(testReportId.isPresent() == false){
 			throw new IllegalArgumentException("unknown test " + test);
 		}
 
-		new AppiumSuiteReportResource(client).updateTestReport(batchId, suiteReport.getId(), testReportId.get(), new TestResult(passed));
+		new AppiumSuiteReportResource(client).updateTestReport(suiteId, suiteReport.getId(), testReportId.get(), new TestResult(passed));
 	}
 
-	private void createBatchReportAndTestReport(boolean passed) {
+	private void createSuiteReportAndTestReport(boolean passed) {
 		AppiumResource appiumResource = new AppiumResource(client);
 		appiumResource.updateTestReportStatus(appiumDriver.getSessionId(), passed);
 	}
@@ -114,9 +114,9 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		this.client = RestClient.Factory.createClient(baseUrl, (String) appiumDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY));
 	}
 
-	public void configureForBatchReplay(String device, long batchId, SuiteReport suiteReport) {
+	public void configureForBatchReplay(String device, long suiteId, SuiteReport suiteReport) {
 		this.device = device;
-		this.batchId = batchId;
+		this.suiteId = suiteId;
 		this.suiteReport = suiteReport;
 	}
 

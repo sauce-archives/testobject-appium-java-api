@@ -42,7 +42,7 @@ public class TestObjectAppiumSuite extends Suite {
             for (TestRule testRule : testRules) {
                 if(testRule instanceof TestObjectTestResultWatcher){
                     TestObjectTestResultWatcher resultWatcher = (TestObjectTestResultWatcher) testRule;
-                    resultWatcher.configureForBatchReplay(device, config.testObjectBatchId(), suiteReport);
+                    resultWatcher.configureForBatchReplay(device, config.testObjectSuiteId(), suiteReport);
                 }
             }
 
@@ -119,12 +119,12 @@ public class TestObjectAppiumSuite extends Suite {
 
         RestClient client = RestClient.Factory.createClient(config.baseUrl(), config.testObjectApiKey());
         try{
-            AppiumSuiteReportResource batchReportResource = new AppiumSuiteReportResource(client);
-            this.suiteReport = batchReportResource.startSuiteReport(config.testObjectBatchId(), tests);
+            AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
+            this.suiteReport = suiteReportResource.startSuiteReport(config.testObjectSuiteId(), tests);
             try {
                 super.run(notifier);
             } finally {
-                batchReportResource.finishBatchReport(config.testObjectBatchId(), suiteReport.getId());
+                suiteReportResource.finishSuiteReport(config.testObjectSuiteId(), suiteReport.getId());
             }
         } finally {
             client.close();
