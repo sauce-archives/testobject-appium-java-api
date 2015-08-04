@@ -124,7 +124,8 @@ public class TestObjectAppiumSuite extends Suite {
             try {
                 super.run(notifier);
             } finally {
-                suiteReportResource.finishSuiteReport(config.testObjectSuiteId(), suiteReport.getId());
+                //TODO do we need this?
+                //suiteReportResource.finishSuiteReport(config.testObjectSuiteId(), suiteReport.getId());
             }
         } finally {
             client.close();

@@ -21,6 +21,9 @@ public class CalculatorTest {
 	@Rule
 	public WireMockRule httpServer = new WireMockRule(8989);
 
+	@Rule
+	public TestObjectTestResultWatcher watcher = new TestObjectTestResultWatcher();
+
 	private AndroidDriver driver;
 
 	@Before
@@ -32,7 +35,6 @@ public class CalculatorTest {
 		capabilities.setCapability("testobject_api_key", "E8DD63C22A3841FD90ED87DCB6D31127");
 		capabilities.setCapability("testobject_app_id", "1");
 		capabilities.setCapability("testobject_device", "LG_Nexus_4_E960_real");
-
 
 		capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.android.calculator2");
 		capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "Calculator");

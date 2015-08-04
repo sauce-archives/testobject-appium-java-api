@@ -1,5 +1,6 @@
 package org.testobject.appium.common;
 
+import org.openqa.selenium.remote.SessionId;
 import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.common.data.TestReport;
 import org.testobject.appium.common.data.TestResult;
@@ -31,8 +32,19 @@ public class AppiumSuiteReportResource {
 				.path("suites").path(Long.toString(suiteId))
 				.path("reports").path(Long.toString(suiteReportId.value()))
 				.path("results").path(Integer.toString(testReportId.value()))
+				.path("finish")
 				.type(MediaType.APPLICATION_JSON_TYPE)
 				.put(TestReport.class, testResult);
+	}
+
+	public void startTestReport(long suiteId, SuiteReport.Id suiteReportId, TestReport.Id testReportId, SessionId sessionId) {
+		client
+				.path("suites").path(Long.toString(suiteId))
+				.path("reports").path(Long.toString(suiteReportId.value()))
+				.path("results").path(Integer.toString(testReportId.value()))
+				.path("start")
+				.type(MediaType.APPLICATION_JSON_TYPE)
+				.post(sessionId.toString());
 	}
 
 	//
