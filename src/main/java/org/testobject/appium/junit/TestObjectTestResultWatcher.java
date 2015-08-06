@@ -23,13 +23,11 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	private final String baseUrl;
 
 	private AppiumDriver appiumDriver;
-
 	private RestClient client;
-
-	private String device;
 
 	private long suiteId;
 	private SuiteReport suiteReport;
+	private Test test;
 
 	public TestObjectTestResultWatcher() {
 		this(TESTOBJECT_API_ENDPOINT);
@@ -41,7 +39,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	@Override
 	protected void starting(Description description) {
-		super.starting(description); //todo implement properly
+		this.test = Test.from(description);
 	}
 
 	@Override protected void succeeded(Description description) {
@@ -61,12 +59,11 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 			return;
 		}
 
-		try{
+		try {
 			appiumDriver.quit();
 		} finally {
 			client.close();
 		}
-
 	}
 
 	private void reportPassed(boolean passed, Description description) {
@@ -123,10 +120,18 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		this.client = RestClient.Factory.createClient(baseUrl, (String) appiumDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY));
 	}
 
-	public void configureForBatchReplay(String device, long suiteId, SuiteReport suiteReport) {
-		this.device = device;
+	public void configureForBatchReplay(long suiteId, SuiteReport suiteReport) {
 		this.suiteId = suiteId;
 		this.suiteReport = suiteReport;
 	}
 
+	public String getTestReportId() {
+		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(this.test);
+
+		if (!testReportId.isPresent()) {
+			throw new IllegalStateException("test report not present");
+		}
+
+		return testReportId.get().toString();
+	}
 }

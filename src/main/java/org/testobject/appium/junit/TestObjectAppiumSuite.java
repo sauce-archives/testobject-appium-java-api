@@ -42,7 +42,7 @@ public class TestObjectAppiumSuite extends Suite {
             for (TestRule testRule : testRules) {
                 if(testRule instanceof TestObjectTestResultWatcher){
                     TestObjectTestResultWatcher resultWatcher = (TestObjectTestResultWatcher) testRule;
-                    resultWatcher.configureForBatchReplay(device, config.testObjectSuiteId(), suiteReport);
+                    resultWatcher.configureForBatchReplay(config.testObjectSuiteId(), suiteReport);
                 }
             }
 

@@ -8,13 +8,17 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testobject.appium.common.TestObject;
+import org.testobject.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 
-@TestObject(baseUrl = "http://127.0.0.1:8989/api", testObjectApiKey = "", testObjectSuiteId = 1, devices = {"device1", "device2"})
+@TestObject(baseUrl = TestObjectCapabilities.TESTOBJECT_API_ENDPOINT,
+		testObjectApiKey = "E8DD63C22A3841FD90ED87DCB6D31127",
+		testObjectSuiteId = 7,
+		devices = {"Fairphone_real", "Motorola_Nexus_6_real"})
 @RunWith(TestObjectAppiumSuite.class)
 public class CalculatorTest {
 
@@ -29,22 +33,23 @@ public class CalculatorTest {
 	@Before
 	public void setup() throws MalformedURLException {
 		DesiredCapabilities capabilities = new DesiredCapabilities();
+
 		capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "android");
 		capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "android");
 
-		capabilities.setCapability("testobject_api_key", "E8DD63C22A3841FD90ED87DCB6D31127");
-		capabilities.setCapability("testobject_app_id", "1");
-		capabilities.setCapability("testobject_device", "LG_Nexus_4_E960_real");
+		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, "E8DD63C22A3841FD90ED87DCB6D31127");
+		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID, watcher.getTestReportId());
 
 		capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.android.calculator2");
 		capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "Calculator");
 
-		driver = new AndroidDriver(new URL("http://branches.testobject.org/api/appium/wd/hub"), capabilities);
+		driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
+		watcher.setAppiumDriver(driver);
 	}
 
 	@After
 	public void tearDown() {
-		if(driver!=null){
+		if (driver != null){
 			driver.quit();
 		}
 	}
