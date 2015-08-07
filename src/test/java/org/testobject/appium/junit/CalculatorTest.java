@@ -1,17 +1,17 @@
 package org.testobject.appium.junit;
 
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testobject.appium.common.TestObject;
 import org.testobject.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import static org.junit.Assert.assertEquals;
 
@@ -21,9 +21,6 @@ import static org.junit.Assert.assertEquals;
 		devices = {"Fairphone_real", "Motorola_Nexus_6_real"})
 @RunWith(TestObjectAppiumSuite.class)
 public class CalculatorTest {
-
-	@Rule
-	public WireMockRule httpServer = new WireMockRule(8989);
 
 	@Rule
 	public TestObjectTestResultWatcher watcher = new TestObjectTestResultWatcher();
@@ -36,22 +33,14 @@ public class CalculatorTest {
 
 		capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "android");
 		capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "android");
+		capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.android.calculator2");
+		capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "Calculator");
 
 		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, "E8DD63C22A3841FD90ED87DCB6D31127");
 		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID, watcher.getTestReportId());
 
-		capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.android.calculator2");
-		capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "Calculator");
-
 		driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
 		watcher.setAppiumDriver(driver);
-	}
-
-	@After
-	public void tearDown() {
-		if (driver != null){
-			driver.quit();
-		}
 	}
 
 	@Test
