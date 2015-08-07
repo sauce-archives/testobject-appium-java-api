@@ -30,7 +30,7 @@ public class AppiumSuiteReportResource {
 	public SuiteReport finishSuiteReport(long suiteId, SuiteReport.Id suiteReportId) {
 		return client
 				.path("suites").path(Long.toString(suiteId))
-				.path("reports")
+				.path("reports").path(Long.toString(suiteReportId.value()))
 				.path("finish")
 				.type(MediaType.APPLICATION_JSON_TYPE)
 				.put(SuiteReport.class);
