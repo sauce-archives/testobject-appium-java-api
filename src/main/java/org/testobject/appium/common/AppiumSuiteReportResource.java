@@ -36,7 +36,7 @@ public class AppiumSuiteReportResource {
 				.put(SuiteReport.class);
 	}
 
-	public TestReport updateTestReport(long suiteId, SuiteReport.Id suiteReportId, TestReport.Id testReportId, TestResult testResult) {
+	public TestReport finishTestReport(long suiteId, SuiteReport.Id suiteReportId, TestReport.Id testReportId, TestResult testResult) {
 		return client
 				.path("suites").path(Long.toString(suiteId))
 				.path("reports").path(Long.toString(suiteReportId.value()))
@@ -46,29 +46,4 @@ public class AppiumSuiteReportResource {
 				.put(TestReport.class, testResult);
 	}
 
-	public void startTestReport(long suiteId, SuiteReport.Id suiteReportId, TestReport.Id testReportId, SessionId sessionId) {
-		client
-				.path("suites").path(Long.toString(suiteId))
-				.path("reports").path(Long.toString(suiteReportId.value()))
-				.path("results").path(Integer.toString(testReportId.value()))
-				.path("start")
-				.type(MediaType.APPLICATION_JSON_TYPE)
-				.post(sessionId.toString());
-	}
-
-	//
-	//    @Override
-	//    public void testFinished(TestReport.Id testReportId, boolean passed) {
-	//        System.out.println(Thread.currentThread().getName() + " uploader test finished");
-	//    }
-	//
-	//    @Override
-	//    public void setAppiumDriver(AppiumDriver appiumDriver) {
-	//
-	//    }
-	//
-	//    @Override
-	//    public void setBaseUrl(String baseUrl) {
-	//
-	//    }
 }

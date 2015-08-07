@@ -88,22 +88,13 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		}
 	}
 
-	private void startTestReport(SuiteReport suiteReport, Test test, boolean passed) {
-		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
-		if(testReportId.isPresent() == false){
-			throw new IllegalArgumentException("unknown test " + test);
-		}
-
-		new AppiumSuiteReportResource(client).startTestReport(suiteId, suiteReport.getId(), testReportId.get(), appiumDriver.getSessionId());
-	}
-
 	private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
 		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
 		if(testReportId.isPresent() == false){
 			throw new IllegalArgumentException("unknown test " + test);
 		}
 
-		new AppiumSuiteReportResource(client).updateTestReport(suiteId, suiteReport.getId(), testReportId.get(), new TestResult(passed));
+		new AppiumSuiteReportResource(client).finishTestReport(suiteId, suiteReport.getId(), testReportId.get(), new TestResult(passed));
 	}
 
 	private void createSuiteReportAndTestReport(boolean passed) {
