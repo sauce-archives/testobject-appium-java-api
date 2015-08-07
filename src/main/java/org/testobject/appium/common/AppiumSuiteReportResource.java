@@ -27,6 +27,15 @@ public class AppiumSuiteReportResource {
 				.post(SuiteReport.class, tests);
 	}
 
+	public SuiteReport finishSuiteReport(long suiteId, SuiteReport.Id suiteReportId) {
+		return client
+				.path("suites").path(Long.toString(suiteId))
+				.path("reports")
+				.path("finish")
+				.type(MediaType.APPLICATION_JSON_TYPE)
+				.put(SuiteReport.class);
+	}
+
 	public TestReport updateTestReport(long suiteId, SuiteReport.Id suiteReportId, TestReport.Id testReportId, TestResult testResult) {
 		return client
 				.path("suites").path(Long.toString(suiteId))
