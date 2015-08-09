@@ -12,9 +12,6 @@ import org.testobject.appium.common.AppiumResource;
 import java.io.Closeable;
 import java.io.IOException;
 
-/**
- * Created by aluedeke on 08.06.15.
- */
 public class RestClient implements Closeable {
 
     public static final class Factory {

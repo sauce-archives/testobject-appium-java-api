@@ -10,19 +10,25 @@ import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerScheduler;
 import org.testobject.appium.common.AppiumSuiteReportResource;
+import org.testobject.appium.common.AppiumSuiteResource;
 import org.testobject.appium.common.TestObject;
 import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.internal.RestClient;
 import org.testobject.appium.junit.internal.Test;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class TestObjectAppiumSuite extends Suite {
 
-    private class PerDeviceRunner extends BlockJUnit4ClassRunner{
+	private class PerDeviceRunner extends BlockJUnit4ClassRunner{
 
         private final String device;
 
@@ -40,7 +46,7 @@ public class TestObjectAppiumSuite extends Suite {
         protected List<TestRule> getTestRules(Object target) {
             List<TestRule> testRules = super.getTestRules(target);
             for (TestRule testRule : testRules) {
-                if(testRule instanceof TestObjectTestResultWatcher){
+                if (testRule instanceof TestObjectTestResultWatcher){
                     TestObjectTestResultWatcher resultWatcher = (TestObjectTestResultWatcher) testRule;
                     resultWatcher.configureForBatchReplay(config.testObjectSuiteId(), suiteReport);
                 }
@@ -87,6 +93,7 @@ public class TestObjectAppiumSuite extends Suite {
     private static final List<Runner> NO_RUNNERS = Collections.emptyList();
 
     private final TestObject config;
+	private final RestClient client;
     private final List<Runner> perDeviceRunners;
 
     private SuiteReport suiteReport;
@@ -95,31 +102,21 @@ public class TestObjectAppiumSuite extends Suite {
         super(clazz, NO_RUNNERS);
 
         this.config = getConfig(clazz);
+		this.client = RestClient.Factory.createClient(config.baseUrl(), config.testObjectApiKey());
 
-        this.perDeviceRunners = toRunners(clazz, config.devices());
+		Set<String> devices = getDevices();
 
-        this.setScheduler(new ThreadPoolScheduler(config.devices().length, config.timeout(), config.timeoutUnit()));
+		this.perDeviceRunners = toRunners(clazz, devices);
+
+        this.setScheduler(new ThreadPoolScheduler(devices.size(), config.timeout(), config.timeoutUnit()));
     }
-
-    private static Set<Test> getTests(Description description) {
-        Set<Test> tests = new HashSet<Test>();
-        for (Description childDescription : description.getChildren()) {
-            for (Description testDescription : childDescription.getChildren()) {
-                tests.add(Test.from(testDescription));
-            }
-        }
-
-        return tests;
-    }
-
 
     @Override
     public void run(RunNotifier notifier) {
         Set<Test> tests = getTests(getDescription());
 
-        RestClient client = RestClient.Factory.createClient(config.baseUrl(), config.testObjectApiKey());
-        try{
-            AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
+		AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
+		try{
             this.suiteReport = suiteReportResource.startSuiteReport(config.testObjectSuiteId(), tests);
             try {
                 super.run(notifier);
@@ -131,25 +128,47 @@ public class TestObjectAppiumSuite extends Suite {
         }
     }
 
-    protected List<Runner> getChildren() {
-        return this.perDeviceRunners;
-    }
+	protected List<Runner> getChildren() {
+		return this.perDeviceRunners;
+	}
 
+	private static TestObject getConfig(Class<?> clazz){
+		TestObject testobject = clazz.getAnnotation(TestObject.class);
+		if(testobject == null){
+			throw new IllegalStateException("class " + clazz + " must be annotated with " + TestObject.class.getName());
+		}
 
-    private List<Runner> toRunners(Class<?> clazz, String[] devices) throws InitializationError {
-        List<Runner> runners = new ArrayList<Runner>(devices.length);
+		return testobject;
+	}
+
+	private Set<String> getDevices() {
+		if (config.devices() != null && config.devices().length > 0) {
+			return new HashSet<String>(Arrays.asList(config.devices()));
+		}
+
+		AppiumSuiteResource suiteReportResource = new AppiumSuiteResource(client);
+		Set<String> devices = suiteReportResource.readSuiteDevices(config.testObjectSuiteId());
+
+		return devices;
+	}
+
+    private List<Runner> toRunners(Class<?> clazz, Set<String> devices) throws InitializationError {
+        List<Runner> runners = new ArrayList<Runner>(devices.size());
         for (String device : devices) {
             runners.add(new PerDeviceRunner(clazz, device));
         }
         return runners;
     }
 
-    private static TestObject getConfig(Class<?> clazz){
-        TestObject testobject = clazz.getAnnotation(TestObject.class);
-        if(testobject == null){
-            throw new IllegalStateException("class " + clazz + " must be annotated with " + TestObject.class.getName());
-        }
+	private static Set<Test> getTests(Description description) {
+		Set<Test> tests = new HashSet<Test>();
+		for (Description childDescription : description.getChildren()) {
+			for (Description testDescription : childDescription.getChildren()) {
+				tests.add(Test.from(testDescription));
+			}
+		}
 
-        return testobject;
-    }
+		return tests;
+	}
+
 }

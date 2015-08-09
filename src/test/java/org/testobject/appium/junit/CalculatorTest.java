@@ -15,10 +15,7 @@ import java.net.MalformedURLException;
 
 import static org.junit.Assert.assertEquals;
 
-@TestObject(baseUrl = TestObjectCapabilities.TESTOBJECT_API_ENDPOINT,
-		testObjectApiKey = "E8DD63C22A3841FD90ED87DCB6D31127",
-		testObjectSuiteId = 7,
-		devices = {"Fairphone_real", "Motorola_Nexus_6_real"})
+@TestObject(testObjectApiKey = "E8DD63C22A3841FD90ED87DCB6D31127", testObjectSuiteId = 7)
 @RunWith(TestObjectAppiumSuite.class)
 public class CalculatorTest {
 

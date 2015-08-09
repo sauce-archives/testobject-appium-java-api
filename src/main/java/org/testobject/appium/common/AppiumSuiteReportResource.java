@@ -1,6 +1,5 @@
 package org.testobject.appium.common;
 
-import org.openqa.selenium.remote.SessionId;
 import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.common.data.TestReport;
 import org.testobject.appium.common.data.TestResult;
