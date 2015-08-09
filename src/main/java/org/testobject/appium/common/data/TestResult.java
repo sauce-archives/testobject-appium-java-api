@@ -5,14 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TestResult {
 
-    private final boolean passed;
+	private final boolean passed;
 
-    @JsonCreator
-    public TestResult(@JsonProperty("passed") boolean passed){
-        this.passed = passed;
-    }
+	@JsonCreator
+	public TestResult(@JsonProperty("passed") boolean passed) {
+		this.passed = passed;
+	}
 
-    public boolean isPassed() {
-        return passed;
-    }
+	public boolean isPassed() {
+		return passed;
+	}
+
 }

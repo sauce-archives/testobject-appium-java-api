@@ -47,27 +47,28 @@ public class Test {
         if (!className.equals(test.className)) return false;
         if (!methodName.equals(test.methodName)) return false;
         return deviceId.equals(test.deviceId);
-
     }
 
-    @Override
-    public int hashCode() {
-        int result = className.hashCode();
-        result = 31 * result + methodName.hashCode();
-        result = 31 * result + deviceId.hashCode();
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		int result = className.hashCode();
+		result = 31 * result + methodName.hashCode();
+		result = 31 * result + deviceId.hashCode();
 
-    public static Test from(Description testDescription) {
-        Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN.matcher(testDescription.getMethodName());
-        if(matcher.matches() == false) {
-            throw new RuntimeException("unable to match against method name: " + testDescription.getMethodName());
-        }
+		return result;
+	}
 
-        String className = testDescription.getClassName();
-        String methodName = matcher.group(1);
-        String deviceId = matcher.group(2);
+	public static Test from(Description testDescription) {
+		Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN.matcher(testDescription.getMethodName());
+		if (matcher.matches() == false) {
+			throw new RuntimeException("unable to match against method name: " + testDescription.getMethodName());
+		}
 
-        return new Test(className, methodName, deviceId);
-    }
+		String className = testDescription.getClassName();
+		String methodName = matcher.group(1);
+		String deviceId = matcher.group(2);
+
+		return new Test(className, methodName, deviceId);
+	}
+
 }

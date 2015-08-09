@@ -28,7 +28,7 @@ public final class TestObjectCapabilities {
 
 	public static URL toAppiumEndpointURL(String url) {
 		try {
-			return new URL(url+ "/appium/wd/hub");
+			return new URL(url + "/appium/wd/hub");
 		} catch (MalformedURLException e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}

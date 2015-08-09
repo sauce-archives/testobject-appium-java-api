@@ -28,113 +28,114 @@ import java.util.concurrent.TimeUnit;
 
 public class TestObjectAppiumSuite extends Suite {
 
-	private class PerDeviceRunner extends BlockJUnit4ClassRunner{
+	private class PerDeviceRunner extends BlockJUnit4ClassRunner {
 
-        private final String deviceId;
+		private final String deviceId;
 
-        public PerDeviceRunner(Class<?> clazz, String deviceId) throws InitializationError {
-            super(clazz);
-            this.deviceId = deviceId;
-        }
+		public PerDeviceRunner(Class<?> clazz, String deviceId) throws InitializationError {
+			super(clazz);
+			this.deviceId = deviceId;
+		}
 
-        @Override
-        protected Description describeChild(FrameworkMethod method) {
-            return Description.createTestDescription(getTestClass().getJavaClass(), testName(method) + "[" + deviceId + "]", method.getAnnotations());
-        }
+		@Override
+		protected Description describeChild(FrameworkMethod method) {
+			return Description
+					.createTestDescription(getTestClass().getJavaClass(), testName(method) + "[" + deviceId + "]", method.getAnnotations());
+		}
 
-        @Override
-        protected List<TestRule> getTestRules(Object target) {
-            List<TestRule> testRules = super.getTestRules(target);
-            for (TestRule testRule : testRules) {
-                if (testRule instanceof TestObjectTestResultWatcher){
-                    TestObjectTestResultWatcher resultWatcher = (TestObjectTestResultWatcher) testRule;
-                    resultWatcher.configureForSuiteExecution(config.testObjectApiKey(), config.testObjectSuiteId(), suiteReport);
-                }
-            }
+		@Override
+		protected List<TestRule> getTestRules(Object target) {
+			List<TestRule> testRules = super.getTestRules(target);
+			for (TestRule testRule : testRules) {
+				if (testRule instanceof TestObjectTestResultWatcher) {
+					TestObjectTestResultWatcher resultWatcher = (TestObjectTestResultWatcher) testRule;
+					resultWatcher.configureForSuiteExecution(config.testObjectApiKey(), config.testObjectSuiteId(), suiteReport);
+				}
+			}
 
-            return testRules;
-        }
+			return testRules;
+		}
 
-        @Override
-        protected String getName() {
-            return super.getName() + "[" + deviceId + "]";
-        }
+		@Override
+		protected String getName() {
+			return super.getName() + "[" + deviceId + "]";
+		}
 
-    }
+	}
 
-    protected static class ThreadPoolScheduler implements RunnerScheduler {
+	protected static class ThreadPoolScheduler implements RunnerScheduler {
 
-        private final int timeout;
-        private final TimeUnit timeoutUnit;
+		private final int timeout;
+		private final TimeUnit timeoutUnit;
 
-        private final ExecutorService executor;
+		private final ExecutorService executor;
 
-        public ThreadPoolScheduler(int numberOfThreads, int timeout, TimeUnit timeoutUnit) {
-            this.timeout = timeout;
-            this.timeoutUnit = timeoutUnit;
+		public ThreadPoolScheduler(int numberOfThreads, int timeout, TimeUnit timeoutUnit) {
+			this.timeout = timeout;
+			this.timeoutUnit = timeoutUnit;
 
-            executor = Executors.newFixedThreadPool(numberOfThreads);
-        }
+			executor = Executors.newFixedThreadPool(numberOfThreads);
+		}
 
-        public void schedule(final Runnable childStatement) {
-            executor.submit(childStatement);
-        }
+		public void schedule(final Runnable childStatement) {
+			executor.submit(childStatement);
+		}
 
-        public void finished() {
-            executor.shutdown();
-            try {
-                executor.awaitTermination(timeout, timeoutUnit);
-            } catch (InterruptedException exc) {
-                throw new RuntimeException(exc);
-            }
-        }
-    }
+		public void finished() {
+			executor.shutdown();
+			try {
+				executor.awaitTermination(timeout, timeoutUnit);
+			} catch (InterruptedException exc) {
+				throw new RuntimeException(exc);
+			}
+		}
+	}
 
-    private static final List<Runner> NO_RUNNERS = Collections.emptyList();
+	private static final List<Runner> NO_RUNNERS = Collections.emptyList();
 
-    private final TestObject config;
+	private final TestObject config;
 	private final RestClient client;
-    private final List<Runner> perDeviceRunners;
+	private final List<Runner> perDeviceRunners;
 
-    private SuiteReport suiteReport;
+	private SuiteReport suiteReport;
 
-    public TestObjectAppiumSuite(Class<?> clazz) throws InitializationError {
-        super(clazz, NO_RUNNERS);
+	public TestObjectAppiumSuite(Class<?> clazz) throws InitializationError {
+		super(clazz, NO_RUNNERS);
 
-        this.config = getConfig(clazz);
+		this.config = getConfig(clazz);
 		this.client = RestClient.Factory.createClient(config.testObjectApiEndpoint(), config.testObjectApiKey());
 
 		Set<String> deviceIds = getDeviceIds();
 
 		this.perDeviceRunners = toRunners(clazz, deviceIds);
 
-        this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), config.timeout(), config.timeoutUnit()));
-    }
+		this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), config.timeout(), config.timeoutUnit()));
+	}
 
-    @Override
-    public void run(RunNotifier notifier) {
-        Set<Test> tests = getTests(getDescription());
+	@Override
+	public void run(RunNotifier notifier) {
+		Set<Test> tests = getTests(getDescription());
 
 		AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
 		try {
-            this.suiteReport = suiteReportResource.startSuiteReport(config.testObjectSuiteId(), tests);
-            try {
-                super.run(notifier);
-            } finally {
-                suiteReportResource.finishSuiteReport(config.testObjectSuiteId(), suiteReport.getId());
-            }
-        } finally {
-            client.close();
-        }
-    }
+			this.suiteReport = suiteReportResource.startSuiteReport(config.testObjectSuiteId(), tests);
+			try {
+				super.run(notifier);
+			} finally {
+				suiteReportResource.finishSuiteReport(config.testObjectSuiteId(), suiteReport.getId());
+			}
+		} finally {
+			client.close();
+		}
+	}
 
 	protected List<Runner> getChildren() {
 		return this.perDeviceRunners;
 	}
 
-	private static TestObject getConfig(Class<?> clazz){
+	private static TestObject getConfig(Class<?> clazz) {
 		TestObject testobject = clazz.getAnnotation(TestObject.class);
-		if(testobject == null){
+		if (testobject == null) {
 			throw new IllegalStateException("class " + clazz + " must be annotated with " + TestObject.class.getName());
 		}
 
@@ -152,13 +153,13 @@ public class TestObjectAppiumSuite extends Suite {
 		return deviceIds;
 	}
 
-    private List<Runner> toRunners(Class<?> clazz, Set<String> deviceIds) throws InitializationError {
-        List<Runner> runners = new ArrayList<Runner>(deviceIds.size());
-        for (String deviceId : deviceIds) {
-            runners.add(new PerDeviceRunner(clazz, deviceId));
-        }
-        return runners;
-    }
+	private List<Runner> toRunners(Class<?> clazz, Set<String> deviceIds) throws InitializationError {
+		List<Runner> runners = new ArrayList<Runner>(deviceIds.size());
+		for (String deviceId : deviceIds) {
+			runners.add(new PerDeviceRunner(clazz, deviceId));
+		}
+		return runners;
+	}
 
 	private static Set<Test> getTests(Description description) {
 		Set<Test> tests = new HashSet<Test>();

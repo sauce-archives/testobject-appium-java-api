@@ -6,8 +6,8 @@ import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.OutputType;
-import org.testobject.appium.common.AppiumSuiteReportResource;
 import org.testobject.appium.common.AppiumResource;
+import org.testobject.appium.common.AppiumSuiteReportResource;
 import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.common.data.TestReport;
 import org.testobject.appium.common.data.TestResult;
@@ -16,7 +16,9 @@ import org.testobject.appium.junit.internal.Test;
 
 import java.net.URL;
 
-import static org.testobject.appium.common.TestObjectCapabilities.*;
+import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
+import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
+import static org.testobject.appium.common.TestObjectCapabilities.toAppiumEndpointURL;
 
 public class TestObjectTestResultWatcher extends TestWatcher {
 
@@ -82,7 +84,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 			return;
 		}
 
-		if (suiteReport == null){
+		if (suiteReport == null) {
 			createSuiteReportAndTestReport(passed);
 		} else {
 			updateSuiteReport(suiteReport, Test.from(description), passed);
@@ -91,7 +93,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
 		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
-		if(testReportId.isPresent() == false){
+		if (testReportId.isPresent() == false) {
 			throw new IllegalArgumentException("unknown test " + test);
 		}
 
@@ -131,4 +133,5 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	public String getApiKey() {
 		return apiKey;
 	}
+
 }
