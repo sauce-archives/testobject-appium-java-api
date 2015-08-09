@@ -10,13 +10,13 @@ import java.util.concurrent.TimeUnit;
 @Target(ElementType.TYPE)
 public @interface TestObject {
 
-    String baseUrl() default TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
+    String testObjectApiEndpoint() default TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
 
     String testObjectApiKey();
 
     long testObjectSuiteId();
 
-    String[] devices() default {};
+    String[] testObjectDeviceIds() default {};
 
     int timeout() default 60;
 

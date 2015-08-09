@@ -32,7 +32,7 @@ public class TestObjectAppiumSuiteTest {
 
     @Test
     public void whenAppiumDriverBackendEqualsTestObjectBackendSendPassedRequest() throws MalformedURLException {
-        httpServer.stubFor(post(urlMatching("/api/rest/appium/v1/batch/1/report")).willReturn(aResponse().withHeader("Content-Type", MediaType.APPLICATION_JSON).withBody("{\"id\": 11, \"testReports\": [{ \"id\": 1, \"test\": { \"className\": \"CalculatorTest\", \"methodName\": \"sumTest\", \"device\": \"device1\"}}, { \"id\": 2, \"test\": { \"className\": \"CalculatorTest\", \"methodName\": \"sumTest\", \"device\": \"device2\"}}]}").withStatus(201)));
+        httpServer.stubFor(post(urlMatching("/api/rest/appium/v1/batch/1/report")).willReturn(aResponse().withHeader("Content-Type", MediaType.APPLICATION_JSON).withBody("{\"id\": 11, \"testReports\": [{ \"id\": 1, \"test\": { \"className\": \"CalculatorTest\", \"methodName\": \"sumTest\", \"deviceId\": \"device1\"}}, { \"id\": 2, \"test\": { \"className\": \"CalculatorTest\", \"methodName\": \"sumTest\", \"deviceId\": \"device2\"}}]}").withStatus(201)));
         httpServer.stubFor(delete(urlMatching("/api/rest/appium/v1/batch/1/report/11")).willReturn(aResponse().withStatus(201)));
 
         JUnitCore.runClasses(CalculatorTest.class);

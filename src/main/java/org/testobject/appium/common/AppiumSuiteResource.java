@@ -13,10 +13,10 @@ public class AppiumSuiteResource {
 		this.client = client;
 	}
 
-	public Set<String> readSuiteDevices(long suiteId) {
+	public Set<String> readSuiteDeviceIds(long suiteId) {
 		return client
 				.path("suites").path(Long.toString(suiteId))
-				.path("devices")
+				.path("deviceIds")
 				.type(MediaType.APPLICATION_JSON_TYPE)
 				.post(Set.class);
 	}

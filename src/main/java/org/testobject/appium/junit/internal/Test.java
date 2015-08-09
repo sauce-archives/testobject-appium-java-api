@@ -13,15 +13,15 @@ public class Test {
 
     private final String className;
     private final String methodName;
-    private final String device;
+    private final String deviceId;
 
     @JsonCreator
     public Test(@JsonProperty("className") String className,
                 @JsonProperty("methodName") String methodName,
-                @JsonProperty("device") String device) {
+                @JsonProperty("deviceId") String deviceId) {
         this.className = className;
         this.methodName = methodName;
-        this.device = device;
+        this.deviceId = deviceId;
     }
 
     public String getClassName() {
@@ -32,8 +32,8 @@ public class Test {
         return methodName;
     }
 
-    public String getDevice() {
-        return device;
+    public String getDeviceId() {
+        return deviceId;
     }
 
 
@@ -46,7 +46,7 @@ public class Test {
 
         if (!className.equals(test.className)) return false;
         if (!methodName.equals(test.methodName)) return false;
-        return device.equals(test.device);
+        return deviceId.equals(test.deviceId);
 
     }
 
@@ -54,7 +54,7 @@ public class Test {
     public int hashCode() {
         int result = className.hashCode();
         result = 31 * result + methodName.hashCode();
-        result = 31 * result + device.hashCode();
+        result = 31 * result + deviceId.hashCode();
         return result;
     }
 
@@ -66,8 +66,8 @@ public class Test {
 
         String className = testDescription.getClassName();
         String methodName = matcher.group(1);
-        String device = matcher.group(2);
+        String deviceId = matcher.group(2);
 
-        return new Test(className, methodName, device);
+        return new Test(className, methodName, deviceId);
     }
 }

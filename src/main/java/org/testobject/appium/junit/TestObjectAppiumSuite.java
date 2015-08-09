@@ -30,16 +30,16 @@ public class TestObjectAppiumSuite extends Suite {
 
 	private class PerDeviceRunner extends BlockJUnit4ClassRunner{
 
-        private final String device;
+        private final String deviceId;
 
-        public PerDeviceRunner(Class<?> clazz, String device) throws InitializationError {
+        public PerDeviceRunner(Class<?> clazz, String deviceId) throws InitializationError {
             super(clazz);
-            this.device = device;
+            this.deviceId = deviceId;
         }
 
         @Override
         protected Description describeChild(FrameworkMethod method) {
-            return Description.createTestDescription(getTestClass().getJavaClass(), testName(method) + "[" + device + "]", method.getAnnotations());
+            return Description.createTestDescription(getTestClass().getJavaClass(), testName(method) + "[" + deviceId + "]", method.getAnnotations());
         }
 
         @Override
@@ -57,7 +57,7 @@ public class TestObjectAppiumSuite extends Suite {
 
         @Override
         protected String getName() {
-            return super.getName() + "[" + device + "]";
+            return super.getName() + "[" + deviceId + "]";
         }
 
     }
@@ -102,13 +102,13 @@ public class TestObjectAppiumSuite extends Suite {
         super(clazz, NO_RUNNERS);
 
         this.config = getConfig(clazz);
-		this.client = RestClient.Factory.createClient(config.baseUrl(), config.testObjectApiKey());
+		this.client = RestClient.Factory.createClient(config.testObjectApiEndpoint(), config.testObjectApiKey());
 
-		Set<String> devices = getDevices();
+		Set<String> deviceIds = getDeviceIds();
 
-		this.perDeviceRunners = toRunners(clazz, devices);
+		this.perDeviceRunners = toRunners(clazz, deviceIds);
 
-        this.setScheduler(new ThreadPoolScheduler(devices.size(), config.timeout(), config.timeoutUnit()));
+        this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), config.timeout(), config.timeoutUnit()));
     }
 
     @Override
@@ -141,21 +141,21 @@ public class TestObjectAppiumSuite extends Suite {
 		return testobject;
 	}
 
-	private Set<String> getDevices() {
-		if (config.devices() != null && config.devices().length > 0) {
-			return new HashSet<String>(Arrays.asList(config.devices()));
+	private Set<String> getDeviceIds() {
+		if (config.testObjectDeviceIds() != null && config.testObjectDeviceIds().length > 0) {
+			return new HashSet<String>(Arrays.asList(config.testObjectDeviceIds()));
 		}
 
 		AppiumSuiteResource suiteReportResource = new AppiumSuiteResource(client);
-		Set<String> devices = suiteReportResource.readSuiteDevices(config.testObjectSuiteId());
+		Set<String> deviceIds = suiteReportResource.readSuiteDeviceIds(config.testObjectSuiteId());
 
-		return devices;
+		return deviceIds;
 	}
 
-    private List<Runner> toRunners(Class<?> clazz, Set<String> devices) throws InitializationError {
-        List<Runner> runners = new ArrayList<Runner>(devices.size());
-        for (String device : devices) {
-            runners.add(new PerDeviceRunner(clazz, device));
+    private List<Runner> toRunners(Class<?> clazz, Set<String> deviceIds) throws InitializationError {
+        List<Runner> runners = new ArrayList<Runner>(deviceIds.size());
+        for (String deviceId : deviceIds) {
+            runners.add(new PerDeviceRunner(clazz, deviceId));
         }
         return runners;
     }
