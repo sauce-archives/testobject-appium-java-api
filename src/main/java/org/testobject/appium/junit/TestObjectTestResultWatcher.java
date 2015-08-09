@@ -25,6 +25,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	private AppiumDriver appiumDriver;
 	private RestClient client;
 
+	private String apiKey;
 	private long suiteId;
 	private SuiteReport suiteReport;
 	private Test test;
@@ -111,7 +112,8 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		this.client = RestClient.Factory.createClient(baseUrl, (String) appiumDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY));
 	}
 
-	public void configureForBatchReplay(long suiteId, SuiteReport suiteReport) {
+	public void configureForSuiteExecution(String apiKey, long suiteId, SuiteReport suiteReport) {
+		this.apiKey = apiKey;
 		this.suiteId = suiteId;
 		this.suiteReport = suiteReport;
 	}
@@ -124,5 +126,9 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		}
 
 		return testReportId.get().toString();
+	}
+
+	public String getApiKey() {
+		return apiKey;
 	}
 }

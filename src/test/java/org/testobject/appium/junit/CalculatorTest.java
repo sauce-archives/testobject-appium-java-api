@@ -28,12 +28,10 @@ public class CalculatorTest {
 	public void setup() throws MalformedURLException {
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 
-		capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "android");
-		capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "android");
 		capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.android.calculator2");
 		capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "Calculator");
 
-		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, "E8DD63C22A3841FD90ED87DCB6D31127");
+		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, watcher.getApiKey());
 		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID, watcher.getTestReportId());
 
 		driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);

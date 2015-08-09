@@ -48,7 +48,7 @@ public class TestObjectAppiumSuite extends Suite {
             for (TestRule testRule : testRules) {
                 if (testRule instanceof TestObjectTestResultWatcher){
                     TestObjectTestResultWatcher resultWatcher = (TestObjectTestResultWatcher) testRule;
-                    resultWatcher.configureForBatchReplay(config.testObjectSuiteId(), suiteReport);
+                    resultWatcher.configureForSuiteExecution(config.testObjectApiKey(), config.testObjectSuiteId(), suiteReport);
                 }
             }
 
@@ -116,7 +116,7 @@ public class TestObjectAppiumSuite extends Suite {
         Set<Test> tests = getTests(getDescription());
 
 		AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
-		try{
+		try {
             this.suiteReport = suiteReportResource.startSuiteReport(config.testObjectSuiteId(), tests);
             try {
                 super.run(notifier);
