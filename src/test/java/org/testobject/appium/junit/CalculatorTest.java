@@ -5,6 +5,7 @@ import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,7 +46,8 @@ public class CalculatorTest {
 	}
 
 	@Test
-	public void sumTest(){
+	@Ignore
+	public void sumTest() {
 		driver.findElement(MobileBy.id("com.android.calculator2:id/digit_9")).click();
 		driver.findElement(MobileBy.AccessibilityId("plus")).click();
 		driver.findElement(MobileBy.name("5")).click();
