@@ -3,6 +3,7 @@ package org.testobject.appium.junit;
 import io.appium.java_client.MobileBy;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -15,7 +16,7 @@ import java.net.MalformedURLException;
 
 import static org.junit.Assert.assertEquals;
 
-@TestObject(testObjectApiKey = "E8DD63C22A3841FD90ED87DCB6D31127", testObjectSuiteId = 7)
+@TestObject(testObjectApiKey = "E8DD63C22A3841FD90ED87DCB6D31127", testObjectSuiteId = 1)
 @RunWith(TestObjectAppiumSuite.class)
 public class CalculatorTest {
 
@@ -36,6 +37,11 @@ public class CalculatorTest {
 
 		driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
 		watcher.setAppiumDriver(driver);
+	}
+
+	@After
+	public void tearDown() {
+		// Do not quit the driver here. The watcher will take care of it.
 	}
 
 	@Test
