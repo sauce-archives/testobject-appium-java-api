@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 @TestObject(testObjectApiKey = "E8DD63C22A3841FD90ED87DCB6D31127", testObjectSuiteId = 1)
 @RunWith(TestObjectAppiumSuite.class)
+@Ignore
 public class CalculatorTest {
 
 	@Rule
@@ -46,7 +47,6 @@ public class CalculatorTest {
 	}
 
 	@Test
-	@Ignore
 	public void sumTest() {
 		driver.findElement(MobileBy.id("com.android.calculator2:id/digit_9")).click();
 		driver.findElement(MobileBy.AccessibilityId("plus")).click();
