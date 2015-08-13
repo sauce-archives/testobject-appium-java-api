@@ -21,4 +21,12 @@ public class AppiumSuiteResource {
 				.get(Set.class);
 	}
 
+	public Set<String> updateAppVersionId(long suiteId, long appVersionId) {
+		return client
+				.path("suites").path(Long.toString(suiteId))
+				.path("deviceIds")
+				.type(MediaType.APPLICATION_JSON_TYPE)
+				.put(Set.class, appVersionId);
+	}
+
 }
