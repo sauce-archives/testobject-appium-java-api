@@ -18,7 +18,7 @@ public class AppiumSuiteResource {
 				.path("suites").path(Long.toString(suiteId))
 				.path("deviceIds")
 				.type(MediaType.APPLICATION_JSON_TYPE)
-				.post(Set.class);
+				.get(Set.class);
 	}
 
 }
