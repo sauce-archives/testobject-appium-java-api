@@ -7,10 +7,8 @@ import com.sun.jersey.api.client.filter.LoggingFilter;
 import com.sun.jersey.client.apache.ApacheHttpClient;
 import com.sun.jersey.client.apache.config.ApacheHttpClientConfig;
 import com.sun.jersey.client.apache.config.DefaultApacheHttpClientConfig;
-import org.testobject.appium.common.AppiumResource;
 
 import java.io.Closeable;
-import java.io.IOException;
 
 public class RestClient implements Closeable {
 

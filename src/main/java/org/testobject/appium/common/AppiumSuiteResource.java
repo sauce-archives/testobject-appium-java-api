@@ -1,5 +1,6 @@
 package org.testobject.appium.common;
 
+import org.testobject.appium.common.data.Suite;
 import org.testobject.appium.internal.RestClient;
 
 import javax.ws.rs.core.MediaType;
@@ -21,12 +22,11 @@ public class AppiumSuiteResource {
 				.get(Set.class);
 	}
 
-	public Set<String> updateAppVersionId(long suiteId, long appVersionId) {
+	public Suite updateSuite(Suite.Id suiteId, Suite suite) {
 		return client
-				.path("suites").path(Long.toString(suiteId))
-				.path("deviceIds")
+				.path("suites").path(suiteId.toString())
 				.type(MediaType.APPLICATION_JSON_TYPE)
-				.put(Set.class, appVersionId);
+				.put(Suite.class, suite);
 	}
 
 }
