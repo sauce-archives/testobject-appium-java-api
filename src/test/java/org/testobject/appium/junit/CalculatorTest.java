@@ -17,9 +17,9 @@ import java.net.MalformedURLException;
 
 import static org.junit.Assert.assertEquals;
 
-@TestObject(testObjectApiKey = "E8DD63C22A3841FD90ED87DCB6D31127", testObjectSuiteId = 1)
+@TestObject(testObjectApiKey = "YOUR_API_KEY_HERE", testObjectSuiteId = 1)
 @RunWith(TestObjectAppiumSuite.class)
-@Ignore
+@Ignore // remove @Ignore to run this test
 public class CalculatorTest {
 
 	@Rule
@@ -39,6 +39,9 @@ public class CalculatorTest {
 
 		driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
 		watcher.setAppiumDriver(driver);
+
+		System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
+		System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
 	}
 
 	@After
