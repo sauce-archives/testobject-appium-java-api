@@ -1,59 +1,56 @@
 package org.testobject.appium.junit;
 
-import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileBy;
-import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.pagefactory.AndroidFindBy;
-import io.appium.java_client.pagefactory.AppiumFieldDecorator;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
-import org.openqa.selenium.By;
+import org.junit.runner.RunWith;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
+import org.testobject.appium.common.TestObject;
+import org.testobject.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
 
+@TestObject(testObjectApiKey = "YOUR_API_KEY_HERE", testObjectSuiteId = 1)
+@RunWith(TestObjectAppiumSuite.class)
+@Ignore // remove @Ignore to run this test
 public class CalculatorTest {
 
-	private static final String LOCALHOST = "http://127.0.0.1:4723/wd/hub";
+	@Rule
+	public TestObjectTestResultWatcher watcher = new TestObjectTestResultWatcher();
 
 	private AndroidDriver driver;
 
 	@Before
 	public void setup() throws MalformedURLException {
 		DesiredCapabilities capabilities = new DesiredCapabilities();
-		capabilities.setCapability(MobileCapabilityType.PLATFORM_NAME, "android");
-		capabilities.setCapability(MobileCapabilityType.DEVICE_NAME, "android");
-
-		capabilities.setCapability("testobject_api_key", "E8DD63C22A3841FD90ED87DCB6D31127");
-		capabilities.setCapability("testobject_app_id", "1");
-		capabilities.setCapability("testobject_device", "LG_Nexus_4_E960_real");
-
 
 		capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.android.calculator2");
 		capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "Calculator");
 
-		driver = new AndroidDriver(new URL("http://branches.testobject.org/api/appium/wd/hub"), capabilities);
+		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, watcher.getApiKey());
+		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID, watcher.getTestReportId());
+
+		driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
+		watcher.setAppiumDriver(driver);
+
+		System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
+		System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
 	}
 
 	@After
 	public void tearDown() {
-		if(driver!=null){
-			driver.quit();
-		}
+		// Do not quit the driver here. The watcher will take care of it.
 	}
 
 	@Test
-	public void sumTest(){
+	public void sumTest() {
 		driver.findElement(MobileBy.id("com.android.calculator2:id/digit_9")).click();
 		driver.findElement(MobileBy.AccessibilityId("plus")).click();
 		driver.findElement(MobileBy.name("5")).click();

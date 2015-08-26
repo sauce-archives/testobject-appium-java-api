@@ -7,10 +7,12 @@ import io.appium.java_client.MobileElement;
 import org.apache.http.impl.conn.Wire;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.SessionId;
+import org.testobject.appium.common.TestObject;
 import org.testobject.appium.junit.TestObjectTestResultWatcher;
 
 import java.net.MalformedURLException;
