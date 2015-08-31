@@ -1,5 +1,6 @@
 package org.testobject.appium.common;
 
+import com.sun.jersey.api.client.GenericType;
 import org.testobject.appium.common.data.Suite;
 import org.testobject.appium.internal.RestClient;
 
@@ -19,7 +20,7 @@ public class AppiumSuiteResource {
 				.path("suites").path(Long.toString(suiteId))
 				.path("deviceIds")
 				.type(MediaType.APPLICATION_JSON_TYPE)
-				.get(Set.class);
+				.get(new GenericType<Set<String>>(Set.class));
 	}
 
 	public Suite updateSuite(Suite.Id suiteId, Suite suite) {

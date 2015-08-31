@@ -49,7 +49,7 @@ public class TestObjectAppiumSuite extends Suite {
 			for (TestRule testRule : testRules) {
 				if (testRule instanceof TestObjectTestResultWatcher) {
 					TestObjectTestResultWatcher resultWatcher = (TestObjectTestResultWatcher) testRule;
-					resultWatcher.configureForSuiteExecution(config.testObjectApiKey(), config.testObjectSuiteId(), suiteReport);
+					resultWatcher.configureForSuiteExecution(testObjectApiKey, testObjectSuiteId, suiteReport);
 				}
 			}
 
@@ -93,39 +93,100 @@ public class TestObjectAppiumSuite extends Suite {
 
 	private static final List<Runner> NO_RUNNERS = Collections.emptyList();
 
-	private final TestObject config;
 	private final RestClient client;
 	private final List<Runner> perDeviceRunners;
+
+	private String testObjectApiKey;
+	private long testObjectSuiteId;
+	private String[] testObjectDeviceIds;
+
+	private boolean runLocally;
 
 	private SuiteReport suiteReport;
 
 	public TestObjectAppiumSuite(Class<?> clazz) throws InitializationError {
 		super(clazz, NO_RUNNERS);
 
-		this.config = getConfig(clazz);
-		this.client = RestClient.Factory.createClient(config.testObjectApiEndpoint(), config.testObjectApiKey());
+		TestObject config = getConfig(clazz);
 
-		Set<String> deviceIds = getDeviceIds();
+		String runLocallyFromEnvironment = System.getenv("TESTOBJECT_TEST_LOCALLY");
+		runLocally = runLocallyFromEnvironment == null ? config.testLocally() : Boolean.valueOf(runLocallyFromEnvironment);
 
-		this.perDeviceRunners = toRunners(clazz, deviceIds);
+		if (runLocally) {
 
-		this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), config.timeout(), config.timeoutUnit()));
+			this.client = null;
+
+			Set<String> deviceIds = getLocalDeviceId();
+
+			this.perDeviceRunners = toRunners(clazz, deviceIds);
+
+			this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), TestObject.timeoutDefault, TestObject.timeoutUnitDefault));
+
+		} else {
+
+			String endpointFromEnvironment = System.getenv("TESTOBJECT_API_ENDPOINT");
+			String testObjectApiEndpoint = endpointFromEnvironment == null ? config.testObjectApiEndpoint() : endpointFromEnvironment;
+
+			System.out.println("endpoint: "+testObjectApiEndpoint);
+
+			String apiKeyFromEnvironment = System.getenv("TESTOBJECT_API_KEY");
+			testObjectApiKey = apiKeyFromEnvironment == null ? config.testObjectApiKey() : apiKeyFromEnvironment;
+
+			System.out.println("api key: "+testObjectApiKey);
+
+			String suiteIdFromEnvironment = System.getenv("TESTOBJECT_SUITE_ID");
+			testObjectSuiteId = suiteIdFromEnvironment == null ? config.testObjectSuiteId() : Long.parseLong(suiteIdFromEnvironment);
+
+			System.out.println("suite id: "+testObjectSuiteId);
+
+			String deviceIdsFromEnvironment = System.getenv("TESTOBJECT_DEVICE_IDS");
+			testObjectDeviceIds = deviceIdsFromEnvironment == null ? config.testObjectDeviceIds() : deviceIdsFromEnvironment.split(", ");
+
+			String timeoutFromEnvironment = System.getenv("TESTOBJECT_TIMEOUT");
+			int testObjectTimeout = timeoutFromEnvironment == null ? config.timeout() : Integer.parseInt(timeoutFromEnvironment);
+
+			System.out.println(testObjectTimeout);
+
+			this.client = RestClient.Factory.createClient(testObjectApiEndpoint, testObjectApiKey);
+
+			System.out.println("ids length = "+testObjectDeviceIds.length);
+
+			Set<String> deviceIds;
+			if (testObjectDeviceIds.length == 0) {
+				deviceIds = getRemoteDeviceIds();
+			} else {
+				deviceIds = new HashSet<String>(Arrays.asList(testObjectDeviceIds));
+			}
+
+			this.perDeviceRunners = toRunners(clazz, deviceIds);
+
+			this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), testObjectTimeout, config.timeoutUnit()));
+
+		}
 	}
 
 	@Override
 	public void run(RunNotifier notifier) {
 		Set<Test> tests = getTests(getDescription());
 
-		AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
-		try {
-			this.suiteReport = suiteReportResource.startSuiteReport(config.testObjectSuiteId(), tests);
+		if (runLocally) {
+
+			super.run(notifier);
+
+		} else {
+
+			AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
 			try {
-				super.run(notifier);
+				this.suiteReport = suiteReportResource.startSuiteReport(testObjectSuiteId, tests);
+				try {
+					super.run(notifier);
+				} finally {
+					suiteReportResource.finishSuiteReport(testObjectSuiteId, suiteReport.getId());
+				}
 			} finally {
-				suiteReportResource.finishSuiteReport(config.testObjectSuiteId(), suiteReport.getId());
+				client.close();
 			}
-		} finally {
-			client.close();
+
 		}
 	}
 
@@ -142,15 +203,19 @@ public class TestObjectAppiumSuite extends Suite {
 		return testobject;
 	}
 
-	private Set<String> getDeviceIds() {
-		if (config.testObjectDeviceIds() != null && config.testObjectDeviceIds().length > 0) {
-			return new HashSet<String>(Arrays.asList(config.testObjectDeviceIds()));
+	private Set<String> getRemoteDeviceIds() {
+		if (testObjectDeviceIds != null && testObjectDeviceIds.length > 0) {
+			return new HashSet<String>(Arrays.asList(testObjectDeviceIds));
 		}
 
 		AppiumSuiteResource suiteReportResource = new AppiumSuiteResource(client);
-		Set<String> deviceIds = suiteReportResource.readSuiteDeviceIds(config.testObjectSuiteId());
+		Set<String> deviceIds = suiteReportResource.readSuiteDeviceIds(testObjectSuiteId);
 
 		return deviceIds;
+	}
+
+	private Set<String> getLocalDeviceId() {
+		return new HashSet<String>(Arrays.asList("Local_device"));
 	}
 
 	private List<Runner> toRunners(Class<?> clazz, Set<String> deviceIds) throws InitializationError {
