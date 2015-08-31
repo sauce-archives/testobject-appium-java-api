@@ -10,26 +10,17 @@ import java.util.concurrent.TimeUnit;
 @Target(ElementType.TYPE)
 public @interface TestObject {
 
-	String localhostEndpoint = "http://127.0.0.1:4723/wd/hub";
+	boolean testLocally() default false;
 
-	String testObjectApiEndpointDefault = TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
-	String testObjectApiKeyDefault = "";
-	long testObjectSuiteIdDefault = 0;
-	int timeoutDefault  = 60;
-	TimeUnit timeoutUnitDefault = TimeUnit.MINUTES;
-	boolean testLocallyDefault = false;
+	String testObjectApiEndpoint() default TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
 
-	boolean testLocally() default testLocallyDefault;
+	String testObjectApiKey() default "";
 
-	String testObjectApiEndpoint() default testObjectApiEndpointDefault;
-
-	String testObjectApiKey() default testObjectApiKeyDefault;
-
-	long testObjectSuiteId() default testObjectSuiteIdDefault;
+	long testObjectSuiteId() default 0;
 
 	String[] testObjectDeviceIds() default {};
 
-	int timeout() default timeoutDefault;
+	int timeout() default 60;
 
 	TimeUnit timeoutUnit() default TimeUnit.MINUTES;
 

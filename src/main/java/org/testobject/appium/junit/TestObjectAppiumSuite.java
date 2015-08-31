@@ -93,6 +93,9 @@ public class TestObjectAppiumSuite extends Suite {
 
 	private static final List<Runner> NO_RUNNERS = Collections.emptyList();
 
+	private static final int timeoutDefault = 60;
+	private static final TimeUnit timeunitDefault = TimeUnit.MINUTES;
+
 	private final RestClient client;
 	private final List<Runner> perDeviceRunners;
 
@@ -120,24 +123,18 @@ public class TestObjectAppiumSuite extends Suite {
 
 			this.perDeviceRunners = toRunners(clazz, deviceIds);
 
-			this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), TestObject.timeoutDefault, TestObject.timeoutUnitDefault));
+			this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), timeoutDefault, timeunitDefault));
 
 		} else {
 
 			String endpointFromEnvironment = System.getenv("TESTOBJECT_API_ENDPOINT");
 			String testObjectApiEndpoint = endpointFromEnvironment == null ? config.testObjectApiEndpoint() : endpointFromEnvironment;
 
-			System.out.println("endpoint: "+testObjectApiEndpoint);
-
 			String apiKeyFromEnvironment = System.getenv("TESTOBJECT_API_KEY");
 			testObjectApiKey = apiKeyFromEnvironment == null ? config.testObjectApiKey() : apiKeyFromEnvironment;
 
-			System.out.println("api key: "+testObjectApiKey);
-
 			String suiteIdFromEnvironment = System.getenv("TESTOBJECT_SUITE_ID");
 			testObjectSuiteId = suiteIdFromEnvironment == null ? config.testObjectSuiteId() : Long.parseLong(suiteIdFromEnvironment);
-
-			System.out.println("suite id: "+testObjectSuiteId);
 
 			String deviceIdsFromEnvironment = System.getenv("TESTOBJECT_DEVICE_IDS");
 			testObjectDeviceIds = deviceIdsFromEnvironment == null ? config.testObjectDeviceIds() : deviceIdsFromEnvironment.split(", ");
@@ -145,11 +142,7 @@ public class TestObjectAppiumSuite extends Suite {
 			String timeoutFromEnvironment = System.getenv("TESTOBJECT_TIMEOUT");
 			int testObjectTimeout = timeoutFromEnvironment == null ? config.timeout() : Integer.parseInt(timeoutFromEnvironment);
 
-			System.out.println(testObjectTimeout);
-
 			this.client = RestClient.Factory.createClient(testObjectApiEndpoint, testObjectApiKey);
-
-			System.out.println("ids length = "+testObjectDeviceIds.length);
 
 			Set<String> deviceIds;
 			if (testObjectDeviceIds.length == 0) {
@@ -215,7 +208,7 @@ public class TestObjectAppiumSuite extends Suite {
 	}
 
 	private Set<String> getLocalDeviceId() {
-		return new HashSet<String>(Arrays.asList("Local_device"));
+		return new HashSet<String>(Collections.singletonList("Local_device"));
 	}
 
 	private List<Runner> toRunners(Class<?> clazz, Set<String> deviceIds) throws InitializationError {
