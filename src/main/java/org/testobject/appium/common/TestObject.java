@@ -10,11 +10,13 @@ import java.util.concurrent.TimeUnit;
 @Target(ElementType.TYPE)
 public @interface TestObject {
 
+	boolean testLocally() default false;
+
 	String testObjectApiEndpoint() default TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
 
-	String testObjectApiKey();
+	String testObjectApiKey() default "";
 
-	long testObjectSuiteId();
+	long testObjectSuiteId() default 0;
 
 	String[] testObjectDeviceIds() default {};
 
