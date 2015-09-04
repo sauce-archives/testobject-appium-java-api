@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 public class Test {
 
-    private static final Pattern METHOD_AND_CLASS_NAME_PATTERN = Pattern.compile("(.*)\\[(.*)\\]");
+    private static final Pattern METHOD_AND_CLASS_NAME_PATTERN = Pattern.compile("(.+)[\\[\\(]?(.*)[\\]\\)]?");
 
     private final String className;
     private final String methodName;
