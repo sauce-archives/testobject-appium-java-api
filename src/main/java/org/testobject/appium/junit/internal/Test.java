@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 
 public class Test {
 
-    private static final Pattern METHOD_AND_CLASS_NAME_PATTERN = Pattern.compile("(.+)[\\[\\(]?(.*)[\\]\\)]?");
+    private static final Pattern METHOD_AND_CLASS_NAME_PATTERN_STRICT = Pattern.compile("(.+)[\\[\\(](.*)[\\]\\)]");
+    private static final Pattern METHOD_AND_CLASS_NAME_PATTERN_LOOSE = Pattern.compile("(.+)");
 
     private final String className;
     private final String methodName;
@@ -49,26 +50,45 @@ public class Test {
         return deviceId.equals(test.deviceId);
     }
 
-	@Override
-	public int hashCode() {
-		int result = className.hashCode();
-		result = 31 * result + methodName.hashCode();
-		result = 31 * result + deviceId.hashCode();
+    @Override
+    public int hashCode() {
+        int result = className.hashCode();
+        result = 31 * result + methodName.hashCode();
+        result = 31 * result + deviceId.hashCode();
 
-		return result;
-	}
+        return result;
+    }
 
-	public static Test from(Description testDescription) {
-		Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN.matcher(testDescription.getMethodName());
-		if (matcher.matches() == false) {
-			throw new RuntimeException("unable to match against method name: " + testDescription.getMethodName());
-		}
+    public static Test from(Description testDescription) {
 
-		String className = testDescription.getClassName();
-		String methodName = matcher.group(1);
-		String deviceId = matcher.group(2);
+        String className;
+        String methodName;
+        String deviceId = null;
 
-		return new Test(className, methodName, deviceId);
-	}
+        Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN_STRICT.matcher(testDescription.getMethodName());
+
+        if (matcher.matches()) {
+
+            className = testDescription.getClassName();
+            methodName = matcher.group(1);
+            deviceId = matcher.group(2);
+
+        } else {
+
+            matcher = METHOD_AND_CLASS_NAME_PATTERN_LOOSE.matcher(testDescription.getMethodName());
+
+            if (matcher.matches()){
+
+                className = testDescription.getClassName();
+                methodName = matcher.group(1);
+
+            } else {
+                throw new RuntimeException("unable to match against method name: " + testDescription.getMethodName());
+            }
+
+        }
+
+        return new Test(className, methodName, deviceId);
+    }
 
 }
