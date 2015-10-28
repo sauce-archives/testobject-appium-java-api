@@ -21,7 +21,7 @@ import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API
 import static org.testobject.appium.common.TestObjectCapabilities.toAppiumEndpointURL;
 
 public class TestObjectTestResultWatcher extends TestWatcher {
-
+ 
 	private final String baseUrl;
 
 	private AppiumDriver appiumDriver;
