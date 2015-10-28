@@ -2,6 +2,7 @@ package org.testobject.appium.common;
 
 import org.openqa.selenium.remote.SessionId;
 import org.testobject.appium.internal.RestClient;
+import org.testobject.appium.junit.TestObjectTestResultWatcher;
 
 import javax.ws.rs.core.MediaType;
 import java.util.Collections;
@@ -16,7 +17,7 @@ public class AppiumResource {
 		this.client = client;
 	}
 
-	public void updateTestReportStatus(SessionId sessionId, boolean passed) {
+	public void updateTestReportStatus(SessionId sessionId, TestObjectTestResultWatcher.ResultState passed) {
 		client
 				.path("session")
 				.path(sessionId.toString())
