@@ -32,6 +32,10 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	private SuiteReport suiteReport;
 	private Test test;
 
+	public enum ResultState {
+		PASSED, SKIPPED, NOT_PASSED
+	}
+
 	public TestObjectTestResultWatcher() {
 		this(TESTOBJECT_API_ENDPOINT);
 	}
@@ -46,15 +50,15 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	}
 
 	@Override protected void succeeded(Description description) {
-		this.reportPassed(true, description);
+		this.reportPassed(ResultState.PASSED, description);
 	}
 
 	@Override protected void failed(Throwable e, Description description) {
-		this.reportPassed(false, description);
+		this.reportPassed(ResultState.NOT_PASSED, description);
 	}
 
 	@Override protected void skipped(AssumptionViolatedException e, Description description) {
-		this.reportPassed(false, description);
+		this.reportPassed(ResultState.SKIPPED, description);
 	}
 
 	@Override protected void finished(Description description) {
@@ -69,12 +73,12 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		}
 	}
 
-	private void reportPassed(boolean passed, Description description) {
+	private void reportPassed(ResultState passed, Description description) {
 		if (appiumDriver == null) {
 			throw new IllegalStateException("appium driver must be set using setAppiumDriver method");
 		}
 
-		if (passed == false) {
+		if (passed == ResultState.NOT_PASSED) {
 			appiumDriver.getPageSource();
 			appiumDriver.getScreenshotAs(OutputType.FILE);
 		}
@@ -91,7 +95,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		}
 	}
 
-	private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
+	private void updateSuiteReport(SuiteReport suiteReport, Test test, ResultState passed) {
 		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
 		if (testReportId.isPresent() == false) {
 			throw new IllegalArgumentException("unknown test " + test);
@@ -100,7 +104,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		new AppiumSuiteReportResource(client).finishTestReport(suiteId, suiteReport.getId(), testReportId.get(), new TestResult(passed));
 	}
 
-	private void createSuiteReportAndTestReport(boolean passed) {
+	private void createSuiteReportAndTestReport(ResultState passed) {
 		AppiumResource appiumResource = new AppiumResource(client);
 		appiumResource.updateTestReportStatus(appiumDriver.getSessionId(), passed);
 	}
