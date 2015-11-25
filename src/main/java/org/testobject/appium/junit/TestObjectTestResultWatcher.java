@@ -121,6 +121,11 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	}
 
 	public String getTestReportId() {
+
+		if (suiteReport == null) {
+			return null;
+		}
+
 		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(this.test);
 
 		if (!testReportId.isPresent()) {
@@ -128,6 +133,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		}
 
 		return testReportId.get().toString();
+
 	}
 
 	public String getApiKey() {

@@ -17,7 +17,7 @@ import java.net.MalformedURLException;
 
 import static org.junit.Assert.assertEquals;
 
-@TestObject(testObjectApiKey = "YOUR_API_KEY_HERE", testObjectSuiteId = 1)
+@TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 123)
 @RunWith(TestObjectAppiumSuite.class)
 @Ignore // remove @Ignore to run this test
 public class CalculatorTest {
@@ -31,9 +31,6 @@ public class CalculatorTest {
 	public void setup() throws MalformedURLException {
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 
-		capabilities.setCapability(MobileCapabilityType.APP_PACKAGE, "com.android.calculator2");
-		capabilities.setCapability(MobileCapabilityType.APP_ACTIVITY, "Calculator");
-
 		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, watcher.getApiKey());
 		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID, watcher.getTestReportId());
 
@@ -42,11 +39,6 @@ public class CalculatorTest {
 
 		System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
 		System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
-	}
-
-	@After
-	public void tearDown() {
-		// Do not quit the driver here. The watcher will take care of it.
 	}
 
 	@Test

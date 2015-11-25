@@ -1,28 +1,18 @@
 package org.testobject.appium.junit;
 
-import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.appium.java_client.AppiumDriver;
-import io.appium.java_client.MobileElement;
-import org.apache.http.impl.conn.Wire;
 import org.junit.Rule;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.SessionId;
-import org.testobject.appium.common.TestObject;
-import org.testobject.appium.junit.TestObjectTestResultWatcher;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.put;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlMatching;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
 
 public class TestObjectTestResultWatcherTest {
