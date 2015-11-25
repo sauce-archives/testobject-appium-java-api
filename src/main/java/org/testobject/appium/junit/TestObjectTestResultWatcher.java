@@ -8,12 +8,14 @@ import org.junit.runner.Description;
 import org.openqa.selenium.OutputType;
 import org.testobject.appium.common.AppiumResource;
 import org.testobject.appium.common.AppiumSuiteReportResource;
+import org.testobject.appium.common.TestObjectCapabilities;
 import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.common.data.TestReport;
 import org.testobject.appium.common.data.TestResult;
 import org.testobject.appium.internal.RestClient;
 import org.testobject.appium.junit.internal.Test;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
@@ -138,6 +140,16 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	public String getApiKey() {
 		return apiKey;
+	}
+
+	public URL getTestObjectOrLocalAppiumEndpointURL() throws MalformedURLException {
+
+		if (suiteReport == null) {
+			return new URL("http://0.0.0.0:4723/wd/hub");
+		} else {
+			return TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT;
+		}
+
 	}
 
 }
