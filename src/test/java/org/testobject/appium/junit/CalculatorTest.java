@@ -17,7 +17,7 @@ import java.net.MalformedURLException;
 
 import static org.junit.Assert.assertEquals;
 
-@TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 123)
+@TestObject(testObjectApiKey = "7CDE94EFFE3E4EF4A773DB2728688C53", testObjectSuiteId = 780)
 @RunWith(TestObjectAppiumSuite.class)
 @Ignore // remove @Ignore to run this test
 public class CalculatorTest {

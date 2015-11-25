@@ -6,15 +6,14 @@ import org.testobject.appium.junit.TestObjectTestResultWatcher;
 
 public class TestResult {
 
-	@JsonProperty
-	private final TestObjectTestResultWatcher.ResultState passed;
+	private final boolean passed;
 
 	@JsonCreator
-	public TestResult(@JsonProperty("passed") TestObjectTestResultWatcher.ResultState passed) {
+	public TestResult(@JsonProperty("passed") boolean passed) {
 		this.passed = passed;
 	}
 
-	public TestObjectTestResultWatcher.ResultState getState() {
+	public boolean isPassed() {
 		return passed;
 	}
 

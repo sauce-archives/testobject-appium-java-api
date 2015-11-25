@@ -17,7 +17,7 @@ public class AppiumResource {
 		this.client = client;
 	}
 
-	public void updateTestReportStatus(SessionId sessionId, TestObjectTestResultWatcher.ResultState passed) {
+	public void updateTestReportStatus(SessionId sessionId, boolean passed) {
 		client
 				.path("session")
 				.path(sessionId.toString())
