@@ -56,7 +56,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	}
 
 	@Override protected void skipped(AssumptionViolatedException e, Description description) {
-		this.reportPassed(false, description);
+		this.reportSkipped(description);
 	}
 
 	@Override protected void finished(Description description) {
@@ -93,6 +93,23 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		}
 	}
 
+	private void reportSkipped(Description description) {
+		if (appiumDriver == null) {
+			throw new IllegalStateException("appium driver must be set using setAppiumDriver method");
+		}
+
+		URL appiumRemoteAddress = appiumDriver.getRemoteAddress();
+		if (toAppiumEndpointURL(baseUrl).equals(appiumRemoteAddress) == false) {
+			return;
+		}
+
+		if (suiteReport == null) {
+			createSuiteReportAndSkippedTestReport();
+		} else {
+			updateSuiteReportToSkipped(suiteReport, Test.from(description));
+		}
+	}
+
 	private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
 		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
 		if (testReportId.isPresent() == false) {
@@ -102,9 +119,23 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		new AppiumSuiteReportResource(client).finishTestReport(suiteId, suiteReport.getId(), testReportId.get(), new TestResult(passed));
 	}
 
+	private void updateSuiteReportToSkipped(SuiteReport suiteReport, Test test) {
+		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
+		if (testReportId.isPresent() == false) {
+			throw new IllegalArgumentException("unknown test " + test);
+		}
+
+		new AppiumSuiteReportResource(client).skipTestReport(suiteId, suiteReport.getId(), testReportId.get());
+	}
+
 	private void createSuiteReportAndTestReport(boolean passed) {
 		AppiumResource appiumResource = new AppiumResource(client);
 		appiumResource.updateTestReportStatus(appiumDriver.getSessionId(), passed);
+	}
+
+	private void createSuiteReportAndSkippedTestReport() {
+		AppiumResource appiumResource = new AppiumResource(client);
+		appiumResource.updateTestReportStatusToSkipped(appiumDriver.getSessionId());
 	}
 
 	public void setAppiumDriver(AppiumDriver appiumDriver) {
