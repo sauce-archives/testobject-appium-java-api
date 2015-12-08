@@ -4,4 +4,4 @@
 
 Utility classes to provide a better experience when running Appium tests in the TestObject cloud.
 
-For an introduction on how to use the utilities see our [documentation](https://help.testobject.com/docs/testing-tools/automation/appium).
+For an introduction on how to use the utilities see our [documentation](https://help.testobject.com/docs/tools/appium/setup/#suite-setup).
