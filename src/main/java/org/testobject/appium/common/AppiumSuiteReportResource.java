@@ -45,4 +45,14 @@ public class AppiumSuiteReportResource {
 				.put(TestReport.class, testResult);
 	}
 
+	public TestReport skipTestReport(long suiteId, SuiteReport.Id suiteReportId, TestReport.Id testReportId) {
+		return client
+				.path("suites").path(Long.toString(suiteId))
+				.path("reports").path(Long.toString(suiteReportId.value()))
+				.path("results").path(Integer.toString(testReportId.value()))
+				.path("skip")
+				.type(MediaType.APPLICATION_JSON_TYPE)
+				.put(TestReport.class, new TestResult(true));
+	}
+
 }
