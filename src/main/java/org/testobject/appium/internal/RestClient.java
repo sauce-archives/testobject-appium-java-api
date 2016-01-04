@@ -1,5 +1,6 @@
 package org.testobject.appium.internal;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.filter.HTTPBasicAuthFilter;
@@ -11,6 +12,7 @@ import org.apache.commons.httpclient.UsernamePasswordCredentials;
 import org.apache.commons.httpclient.auth.AuthScope;
 
 import java.io.Closeable;
+import java.net.URI;
 
 public class RestClient implements Closeable {
 
@@ -20,10 +22,7 @@ public class RestClient implements Closeable {
             ApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
             config.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES, true);
 
-            boolean useProxy = System.getenv("http.proxyServer") != null;
-            if (useProxy) {
-                addProxyConfiguration(config);
-            }
+            addProxyConfiguration(config, baseUrl);
 
             Client client = ApacheHttpClient.create(config);
             client.addFilter(new LoggingFilter(System.out));
@@ -34,21 +33,27 @@ public class RestClient implements Closeable {
             return new RestClient(client, baseResource);
         }
 
-        private static void addProxyConfiguration(ApacheHttpClientConfig config) {
-            String server = System.getenv("http.proxyServer");
-            String port = System.getenv("http.proxyPort");
-            String url;
-            if (port == null) {
-                url = "http://" + server;
-            } else {
-                url = "http://" + server + ":" + port;
+        // If http[s].proxyHost, proxyPort, proxyUser, and proxyPassword environment variables are present,
+        // then use them.
+        private static void addProxyConfiguration(ApacheHttpClientConfig config, String baseUrl) {
+            String protocol = URI.create(baseUrl).getScheme().toLowerCase();
+
+            Optional<String> proxyHost = Optional.fromNullable(System.getenv(protocol + ".proxyHost"));
+            if (!proxyHost.isPresent()) {
+                return;
             }
+
+            String host = proxyHost.get();
+            String port = Optional.fromNullable(System.getenv(protocol + ".proxyPort")).or("8080");
+            String proxyProtocol = Optional.fromNullable(System.getenv(protocol + ".proxyProtocol")).or("http");
+            String url = proxyProtocol + "://" + host + ":" + port;
             config.getProperties().put(DefaultApacheHttpClientConfig.PROPERTY_PROXY_URI, url);
 
-            String username = System.getenv("http.proxyUser");
-            String password = System.getenv("http.proxyPassword");
-            if (username != null && password != null) {
-                config.getState().getHttpState().setProxyCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
+            Optional<String> username = Optional.fromNullable(System.getenv(protocol + ".proxyUser"));
+            Optional<String> password = Optional.fromNullable(System.getenv(protocol + ".proxyPassword"));
+            if (username.isPresent() && password.isPresent()) {
+                UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username.get(), password.get());
+                config.getState().getHttpState().setProxyCredentials(AuthScope.ANY, credentials);
             }
         }
 
