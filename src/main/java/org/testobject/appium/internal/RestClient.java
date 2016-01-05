@@ -33,7 +33,7 @@ public class RestClient implements Closeable {
             return new RestClient(client, baseResource);
         }
 
-        // If http[s].proxyHost, proxyPort, proxyUser, and proxyPassword environment variables are present,
+        // If http[s].proxyHost, proxyPort, proxyUser, and proxyPassword system properties are present,
         // then use them.
         private static void addProxyConfiguration(ApacheHttpClientConfig config, String baseUrl) {
             String protocol = URI.create(baseUrl).getScheme().toLowerCase();
