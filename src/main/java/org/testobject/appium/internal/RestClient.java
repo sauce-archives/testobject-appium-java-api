@@ -38,19 +38,19 @@ public class RestClient implements Closeable {
         private static void addProxyConfiguration(ApacheHttpClientConfig config, String baseUrl) {
             String protocol = URI.create(baseUrl).getScheme().toLowerCase();
 
-            Optional<String> proxyHost = Optional.fromNullable(System.getenv(protocol + ".proxyHost"));
+            Optional<String> proxyHost = Optional.fromNullable(System.getProperty(protocol + ".proxyHost"));
             if (!proxyHost.isPresent()) {
                 return;
             }
 
             String host = proxyHost.get();
-            String port = Optional.fromNullable(System.getenv(protocol + ".proxyPort")).or("8080");
-            String proxyProtocol = Optional.fromNullable(System.getenv(protocol + ".proxyProtocol")).or("http");
+            String port = Optional.fromNullable(System.getProperty(protocol + ".proxyPort")).or("8080");
+            String proxyProtocol = Optional.fromNullable(System.getProperty(protocol + ".proxyProtocol")).or("http");
             String url = proxyProtocol + "://" + host + ":" + port;
             config.getProperties().put(DefaultApacheHttpClientConfig.PROPERTY_PROXY_URI, url);
 
-            Optional<String> username = Optional.fromNullable(System.getenv(protocol + ".proxyUser"));
-            Optional<String> password = Optional.fromNullable(System.getenv(protocol + ".proxyPassword"));
+            Optional<String> username = Optional.fromNullable(System.getProperty(protocol + ".proxyUser"));
+            Optional<String> password = Optional.fromNullable(System.getProperty(protocol + ".proxyPassword"));
             if (username.isPresent() && password.isPresent()) {
                 UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username.get(), password.get());
                 config.getState().getHttpState().setProxyCredentials(AuthScope.ANY, credentials);
