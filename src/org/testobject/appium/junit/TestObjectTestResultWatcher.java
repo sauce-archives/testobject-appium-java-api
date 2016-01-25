@@ -42,8 +42,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		this.baseUrl = baseUrl;
 	}
 
-	@Override
-	protected void starting(Description description) {
+	@Override protected void starting(Description description) {
 		this.test = Test.from(description);
 	}
 

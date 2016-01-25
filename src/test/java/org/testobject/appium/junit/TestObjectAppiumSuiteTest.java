@@ -12,13 +12,11 @@ import org.openqa.selenium.remote.SessionId;
 
 import javax.ws.rs.core.MediaType;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
 
 public class TestObjectAppiumSuiteTest {
 
