@@ -1,25 +1,23 @@
 package org.testobject.appium.junit;
 
-import io.appium.java_client.MobileBy;
+import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
-import io.appium.java_client.remote.MobileCapabilityType;
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testobject.appium.common.TestObject;
 import org.testobject.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
 
-import static org.junit.Assert.assertEquals;
-
-@TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 123)
+@TestObject(testObjectApiKey = "7CDE94EFFE3E4EF4A773DB2728688C53", testObjectSuiteId = 780)
 @RunWith(TestObjectAppiumSuite.class)
-@Ignore // remove @Ignore to run this test
+//@Ignore // remove @Ignore to run this test
 public class CalculatorTest {
 
 	@Rule
@@ -43,14 +41,23 @@ public class CalculatorTest {
 
 
 	@Test
-	public void sumTest() {
-		driver.findElement(MobileBy.id("com.android.calculator2:id/digit_9")).click();
-		driver.findElement(MobileBy.AccessibilityId("plus")).click();
-		driver.findElement(MobileBy.name("5")).click();
-		driver.findElement(MobileBy.xpath("//android.widget.Button[@text='=']")).click();
+	public void twoPlusTwoOperation() {
 
-		String result = driver.findElement(MobileBy.id("com.android.calculator2:id/formula")).getText();
-		assertEquals("14", result);
+        /* Get the elements. */
+		MobileElement buttonTwo = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
+		MobileElement buttonPlus = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/plus")));
+		MobileElement buttonEquals = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/equal")));
+		MobileElement resultField = (MobileElement)(driver.findElement(By.xpath("//android.widget.EditText[1]")));
+
+        /* Add two and two. */
+		buttonTwo.click();
+		buttonPlus.click();
+		buttonTwo.click();
+		buttonEquals.click();
+
+        /* Check if within given time the correct result appears in the designated field. */
+		(new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
+
 	}
 
 }
