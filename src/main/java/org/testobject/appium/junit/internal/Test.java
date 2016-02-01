@@ -97,7 +97,7 @@ public class Test {
         String methodName;
         String deviceId = null;
 
-        Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN_STRICT.matcher(iTestResult.getTestName());
+        Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN_STRICT.matcher(iTestResult.getMethod().getMethodName());
 
         if (matcher.matches()) {
 
@@ -107,7 +107,7 @@ public class Test {
 
         } else {
 
-            matcher = METHOD_AND_CLASS_NAME_PATTERN_LOOSE.matcher(iTestResult.getTestName());
+            matcher = METHOD_AND_CLASS_NAME_PATTERN_LOOSE.matcher(iTestResult.getMethod().getMethodName());
 
             if (matcher.matches()){
 
@@ -115,7 +115,7 @@ public class Test {
                 methodName = matcher.group(1);
 
             } else {
-                throw new RuntimeException("unable to match against method name: " + iTestResult.getTestName());
+                throw new RuntimeException("unable to match against method name: " + iTestResult.getMethod().getMethodName());
             }
 
         }

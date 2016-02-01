@@ -12,15 +12,10 @@ public final class TestObjectCapabilities {
 	public static final String TESTOBJECT_API_KEY = "testobject_api_key";
 	public static final String TESTOBJECT_TEST_REPORT_ID = "testobject_test_report_id";
 
-	@Deprecated
 	public static final String TESTOBJECT_APP_ID = "testobject_app_id";
-	@Deprecated
 	public static final String TESTOBJECT_DEVICE = "testobject_device";
-	@Deprecated
 	public static final String TESTOBJECT_SUITE_NAME = "testobject_suite_name";
-	@Deprecated
 	public static final String TESTOBJECT_TEST_NAME = "testobject_test_name";
-	@Deprecated
 	public static final String TESTOBJECT_APPIUM_VERSION = "testobject_appium_version";
 
 	private TestObjectCapabilities() {

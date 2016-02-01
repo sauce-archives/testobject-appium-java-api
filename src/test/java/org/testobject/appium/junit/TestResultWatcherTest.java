@@ -15,7 +15,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
 
-public class TestObjectTestResultWatcherTest {
+public class TestResultWatcherTest {
 
 	@Rule
 	public WireMockRule httpServer = new WireMockRule(8989);
