@@ -28,6 +28,9 @@ public class SuiteReport {
 		return id;
 	}
 
+
+	// TODO REMOVE COMMENT
+	// pulling Test object
 	public Optional<TestReport.Id> getTestReportId(Test test) {
 		for (TestReport testReport : testReports) {
 			if (testReport.getTest().equals(test)) {
