@@ -12,8 +12,8 @@ import org.testng.annotations.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-@Listeners({ TestObjectTestNGResultWatcher.class })
-public class IntermediateSetupTestTestNG implements AppiumDriverProvider {
+@Listeners({ TestObjectTestNGTestResultWatcher.class })
+public class AppiumDriverCalculatorWatcherTestTestNG implements AppiumDriverProvider {
 
     private AppiumDriver driver;
 
@@ -22,9 +22,9 @@ public class IntermediateSetupTestTestNG implements AppiumDriverProvider {
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability("testobject_api_key", "YOUR_API_KEY");
+        capabilities.setCapability("testobject_api_key", "7CDE94EFFE3E4EF4A773DB2728688C53");
         capabilities.setCapability("testobject_app_id", "1");
-        capabilities.setCapability("testobject_device", "YOUR_DEVICE");
+        capabilities.setCapability("testobject_device", "Motorola_Moto_G_real");
 
         driver = new AndroidDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities);
 

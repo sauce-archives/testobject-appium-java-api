@@ -6,6 +6,7 @@ import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testobject.appium.common.AppiumResource;
 import org.testobject.appium.common.AppiumSuiteReportResource;
 import org.testobject.appium.common.TestObjectCapabilities;
@@ -26,7 +27,9 @@ public class TestObjectTestResultWatcher extends TestWatcher {
  
 	private final String baseUrl;
 
-	private AppiumDriver appiumDriver;
+	private RemoteWebDriver remoteWebDriver;
+	private URL driverRemoteAddress;
+
 	private RestClient client;
 
 	private String apiKey;
@@ -60,29 +63,28 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	}
 
 	@Override protected void finished(Description description) {
-		if (appiumDriver == null) {
+		if (remoteWebDriver == null) {
 			return;
 		}
 
 		try {
-			appiumDriver.quit();
+			remoteWebDriver.quit();
 		} finally {
 			client.close();
 		}
 	}
 
 	private void reportPassed(boolean passed, Description description) {
-		if (appiumDriver == null) {
-			throw new IllegalStateException("appium driver must be set using setAppiumDriver method");
+		if (remoteWebDriver == null) {
+			throw new IllegalStateException("appium driver must be set using setRemoteWebDriver method");
 		}
 
-		if (passed == false) {
-			appiumDriver.getPageSource();
-			appiumDriver.getScreenshotAs(OutputType.FILE);
+		if (!passed) {
+			remoteWebDriver.getPageSource();
+			remoteWebDriver.getScreenshotAs(OutputType.FILE);
 		}
 
-		URL appiumRemoteAddress = appiumDriver.getRemoteAddress();
-		if (toAppiumEndpointURL(baseUrl).equals(appiumRemoteAddress) == false) {
+		if (!toAppiumEndpointURL(baseUrl).equals(driverRemoteAddress)) {
 			return;
 		}
 
@@ -95,7 +97,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
 		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
-		if (testReportId.isPresent() == false) {
+		if (!testReportId.isPresent()) {
 			throw new IllegalArgumentException("unknown test " + test);
 		}
 
@@ -104,16 +106,26 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	private void createSuiteReportAndTestReport(boolean passed) {
 		AppiumResource appiumResource = new AppiumResource(client);
-		appiumResource.updateTestReportStatus(appiumDriver.getSessionId(), passed);
+		appiumResource.updateTestReportStatus(remoteWebDriver.getSessionId(), passed);
 	}
 
 	public void setAppiumDriver(AppiumDriver appiumDriver) {
-		if (appiumDriver == null) {
-			throw new IllegalArgumentException("appiumDriver must not be null");
+		setRemoteWebDriver(appiumDriver, appiumDriver.getRemoteAddress());
+	}
+
+	public void setRemoteWebDriver(RemoteWebDriver remoteWebDriver, URL remoteAddress) {
+		if (remoteWebDriver == null) {
+			throw new IllegalArgumentException("remoteWebDriver must not be null");
 		}
 
-		this.appiumDriver = appiumDriver;
-		this.client = RestClient.Factory.createClient(baseUrl, (String) appiumDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY));
+		if (remoteAddress == null) {
+			throw new IllegalArgumentException("remoteAddress must not be null");
+		}
+
+		this.remoteWebDriver = remoteWebDriver;
+		this.driverRemoteAddress = remoteAddress;
+
+		this.client = RestClient.Factory.createClient(baseUrl, (String) remoteWebDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY));
 	}
 
 	public void configureForSuiteExecution(String apiKey, long suiteId, SuiteReport suiteReport) {

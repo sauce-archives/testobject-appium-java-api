@@ -41,7 +41,7 @@ public class TestResultWatcherTest {
 	}
 
 	@Test
-	public void whenAppiumDriverBackendIsUnequalToTestObjectBackendDontSendPassedRequestToBackend(){
+	public void whenAppiumDriverBackendIsUnequalToTestObjectBackendDontSendPassedRequestToBackend() throws MalformedURLException {
 		httpServer.stubFor(put(urlMatching("/api/rest/appium/v1/session/aajsbfka-asfbaksfjb-asjkbfakjb-asfbkasjf/test")).willReturn(aResponse().withStatus(201)));
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -50,6 +50,7 @@ public class TestResultWatcherTest {
 		AppiumDriver appiumDriver = mock(AppiumDriver.class);
 		when(appiumDriver.getCapabilities()).thenReturn(capabilities);
 		when(appiumDriver.getSessionId()).thenReturn(new SessionId("aajsbfka-asfbaksfjb-asjkbfakjb-asfbkasjf"));
+		when(appiumDriver.getRemoteAddress()).thenReturn(new URL("http://anotherhost:8989/api/appium/wd/hub"));
 
 		TestObjectTestResultWatcher resultWatcher = new TestObjectTestResultWatcher("http://localhost:8989/api");
 		resultWatcher.setAppiumDriver(appiumDriver);
