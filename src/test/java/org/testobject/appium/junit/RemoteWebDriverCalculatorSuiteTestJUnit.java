@@ -1,6 +1,7 @@
 package org.testobject.appium.junit;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,9 +16,9 @@ import org.testobject.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
 
-@TestObject(testObjectApiKey = "7CDE94EFFE3E4EF4A773DB2728688C53", testObjectSuiteId = 780)
+@TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 123)
 @RunWith(TestObjectAppiumSuite.class)
-//@Ignore // remove @Ignore to run this test
+@Ignore // remove @Ignore to run this test
 public class RemoteWebDriverCalculatorSuiteTestJUnit {
 
     @Rule

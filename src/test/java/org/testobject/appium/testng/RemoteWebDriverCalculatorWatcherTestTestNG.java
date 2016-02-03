@@ -26,9 +26,9 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements RemoteWebDriv
 
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability("testobject_api_key", "7CDE94EFFE3E4EF4A773DB2728688C53");
+        capabilities.setCapability("testobject_api_key", "YOUR_API_KEY");
         capabilities.setCapability("testobject_app_id", "1");
-        capabilities.setCapability("testobject_device", "Motorola_Moto_G_real");
+        capabilities.setCapability("testobject_device", "YOUR_DEVICE_ID");
 
         driver = new RemoteWebDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
 
