@@ -1,6 +1,5 @@
 package org.testobject.appium.testng;
 
-import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;

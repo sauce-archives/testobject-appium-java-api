@@ -111,7 +111,10 @@ public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 		this.remoteWebDriver = remoteWebDriver;
 		this.driverRemoteAddress = remoteAddress;
 
-		this.client = RestClient.Factory.createClient(TESTOBJECT_API_ENDPOINT, (String) remoteWebDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY));
+		this.client = RestClient.Builder.createClient()
+				.withUrl(TESTOBJECT_API_ENDPOINT)
+				.withToken((String) remoteWebDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY))
+				.path(RestClient.REST_APPIUM_PATH)
+				.build();
 	}
-
 }

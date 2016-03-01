@@ -8,6 +8,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
+import org.testobject.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,7 +27,10 @@ public class AppiumDriverCalculatorWatcherTestTestNG implements AppiumDriverProv
         capabilities.setCapability("testobject_app_id", "1");
         capabilities.setCapability("testobject_device", "YOUR_DEVICE_ID");
 
-        driver = new AndroidDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities);
+        driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
+
+        System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
+        System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
 
     }
 
