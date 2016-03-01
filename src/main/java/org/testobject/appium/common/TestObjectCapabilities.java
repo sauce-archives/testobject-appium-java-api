@@ -5,7 +5,7 @@ import java.net.URL;
 
 public final class TestObjectCapabilities {
 
-	public static final String TESTOBJECT_API_ENDPOINT = "https://app.testobject.com:443/api";
+	public static final String TESTOBJECT_API_ENDPOINT = "http://appium.testobject.com:80/api";
 
 	public static final URL TESTOBJECT_APPIUM_ENDPOINT = toAppiumEndpointURL(TESTOBJECT_API_ENDPOINT);
 

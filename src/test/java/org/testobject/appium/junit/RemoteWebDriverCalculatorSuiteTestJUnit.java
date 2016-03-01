@@ -18,7 +18,7 @@ import java.net.MalformedURLException;
 
 @TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 123)
 @RunWith(TestObjectAppiumSuite.class)
-@Ignore // remove @Ignore to run this test
+//@Ignore // remove @Ignore to run this test
 public class RemoteWebDriverCalculatorSuiteTestJUnit {
 
     @Rule

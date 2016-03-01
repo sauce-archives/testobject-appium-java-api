@@ -57,6 +57,8 @@ public class RestClient implements Closeable {
             }
         }
 
+
+
     }
 
     private final Client client;
