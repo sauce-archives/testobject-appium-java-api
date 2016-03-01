@@ -1,6 +1,7 @@
 package org.testobject.appium.junit;
 
 import com.google.common.base.Optional;
+import com.sun.jersey.api.client.WebResource;
 import io.appium.java_client.AppiumDriver;
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
@@ -125,7 +126,11 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		this.remoteWebDriver = remoteWebDriver;
 		this.driverRemoteAddress = remoteAddress;
 
-		this.client = RestClient.Factory.createClient(baseUrl, (String) remoteWebDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY));
+		this.client = RestClient.Builder.createClient()
+				.withUrl(baseUrl)
+				.withToken((String) remoteWebDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY))
+				.path(RestClient.REST_APPIUM_PATH)
+				.build();
 	}
 
 	public void configureForSuiteExecution(String apiKey, long suiteId, SuiteReport suiteReport) {

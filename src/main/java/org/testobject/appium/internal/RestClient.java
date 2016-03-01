@@ -16,25 +16,50 @@ import java.net.URI;
 
 public class RestClient implements Closeable {
 
-    public static final class Factory {
+    public static final String REST_APPIUM_PATH = "/rest/appium/v1/";
+    public static final String REST_DEVICES_PATH = "/rest/devices/v1/";
 
-        public static RestClient createClient(String baseUrl, String token) {
+    public static final class Builder {
+
+        private Client client;
+        private String baseUrl;
+        private String path = "";
+        private String token = "";
+
+        public static Builder createClient() {
+            return new Builder();
+        }
+
+        public Builder withUrl(String baseUrl) {
+            this.baseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder withToken(String token) {
+            this.token = token;
+            return this;
+        }
+
+        public Builder path(String path) {
+            this.path = path;
+            return this;
+        }
+
+        public RestClient build() {
+
             ApacheHttpClientConfig config = new DefaultApacheHttpClientConfig();
             config.getProperties().put(ApacheHttpClientConfig.PROPERTY_HANDLE_COOKIES, true);
 
             addProxyConfiguration(config, baseUrl);
 
-            Client client = ApacheHttpClient.create(config);
+            client = ApacheHttpClient.create(config);
             client.addFilter(new LoggingFilter(System.out));
             client.addFilter(new HTTPBasicAuthFilter(token, ""));
 
-            WebResource baseResource = client.resource(baseUrl + "/rest/appium/v1/");
-
-            return new RestClient(client, baseResource);
+            WebResource webResource = client.resource(baseUrl + path);
+            return new RestClient(client, webResource);
         }
 
-        // If http[s].proxyHost, proxyPort, proxyUser, and proxyPassword system properties are present,
-        // then use them.
         private static void addProxyConfiguration(ApacheHttpClientConfig config, String baseUrl) {
             String protocol = URI.create(baseUrl).getScheme().toLowerCase();
 
@@ -56,8 +81,6 @@ public class RestClient implements Closeable {
                 config.getState().getHttpState().setProxyCredentials(AuthScope.ANY, credentials);
             }
         }
-
-
 
     }
 
