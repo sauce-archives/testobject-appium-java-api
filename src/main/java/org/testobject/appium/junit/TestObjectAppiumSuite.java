@@ -16,12 +16,7 @@ import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.internal.RestClient;
 import org.testobject.appium.junit.internal.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -142,7 +137,11 @@ public class TestObjectAppiumSuite extends Suite {
 			String timeoutFromEnvironment = System.getenv("TESTOBJECT_TIMEOUT");
 			int testObjectTimeout = timeoutFromEnvironment == null ? config.timeout() : Integer.parseInt(timeoutFromEnvironment);
 
-			this.client = RestClient.Factory.createClient(testObjectApiEndpoint, testObjectApiKey);
+			this.client = RestClient.Builder.createClient()
+					.withUrl(testObjectApiEndpoint)
+					.withToken(testObjectApiKey)
+					.path(RestClient.REST_APPIUM_PATH)
+					.build();
 
 			Set<String> deviceIds;
 			if (testObjectDeviceIds.length == 0) {
