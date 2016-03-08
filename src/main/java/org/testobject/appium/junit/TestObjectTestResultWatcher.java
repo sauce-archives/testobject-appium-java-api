@@ -168,5 +168,4 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		}
 
 	}
-
 }
