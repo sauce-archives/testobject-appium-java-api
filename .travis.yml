@@ -4,6 +4,8 @@ env:
   - secure: TzizaKD/SwlIEKhurmEb2dG6UFoZ7JEiV+RsCIvzVN5yX+ac1WOlaOliEy4xF1M8EbVLIUd2W2bXTsfWth9jL8eqPP6O5qQOdzaFLgnUsIUA7tMYU0+c576Jj3GIUGn26WTwtxfVPHlec2Ii3qv4ueAnlc/VR5kG+9qZLtL9yPY=
   - secure: hjodnaU+d+PuDenVhpbHtLqg7hO2MppZMpCp+ULgIHZgOsArFMhVaj+j7BiZqa8taJ8lCX2vw6NCDHEot2lfCQ30OCg/WIXUBywpPyuXCUFqC8bSQYzl4KeuaK2M1OfNpd+3JU1uzd+MeSvFyvljWz+b7kv4ZAnN68XKy/QPn94=
   - secure: Vk3bu9c4VijQaO8mBQboMljydKJeBAmVx5yX34JTLqXxRQDt6ODBgSGqnSHle6FpyZCHsGdXzR7NqPJNdzDZ52qSgsecDNzUF5Bhz+eiHR2bAyadiZ2B3DcT9bx8dTEJnmlmduwnXIGTRT7RD3pGX7eZ+5A65ECe+DkK4hd0rnY=
+  - secure: Rfaypd4qzX11ZZPD8YH+mCnurcS6LKJiSnCmEtyT1RwhQwpEhJQXfvNqjCpFRVIqjF3/mtdn++aS2uSVJt/cgvJDFztxiFWW4/u5BQOv7CpBlZLbhTuWHBwasi/WVHt63L2DkLIq5ALs478JnpzemAwvlWxJjW4ca+W/gMeBOHA=
+  - secure: eLAo1kmaS/TWf4mMHDzd4y9TrmSFySJnI6lnajzkJqR13WBcSK6wXsSICY+VTwxMwWbbdy82XoXmuKL3gWLNNnASnT5xHy5r4sVOebBqrK6IasychQPYwakJVxxO6VTdHqqc2R//3xJLNxdc8FDpjaIIjhcBBTI5mUyGvnR4yYQ=
 cache:
   directories:
   - $HOME/.m2
