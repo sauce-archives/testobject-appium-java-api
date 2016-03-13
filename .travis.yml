@@ -1,10 +1,22 @@
 language: java
 env:
   global:
-  - secure: ZCGDifklmwwL/w6cvcpcpWHr7xVTB6AAFir+60z4FGcfvrNoRPVvGLzbhkgAd8albwg7lkgp4auoot/tMHfSkbqiJ3NDLZxu1pSaIUiSNQOw9tkKrJPkRiaiObwkBXPVrIf2Dq+Gxi43+QVRB0FkyHHeLuiiOalI894zR6L4LRw=
-  - secure: Y/tLJV0oJf490f1ZvfjrU7MV+nnkQ70+0fLwwr/iUsvxX7rBi1isXfN+fCaJMmXxAMEk3SYRyJ4Hu+ulh51b0BqC2cg5TISF69D1STrNrgeEeXm2ucBvZhIidRA6adnZNgPPFNA0DY+dejuzglKpSI72p10IBnL++FLsjTNp5js=
+  - secure: TzizaKD/SwlIEKhurmEb2dG6UFoZ7JEiV+RsCIvzVN5yX+ac1WOlaOliEy4xF1M8EbVLIUd2W2bXTsfWth9jL8eqPP6O5qQOdzaFLgnUsIUA7tMYU0+c576Jj3GIUGn26WTwtxfVPHlec2Ii3qv4ueAnlc/VR5kG+9qZLtL9yPY=
+  - secure: hjodnaU+d+PuDenVhpbHtLqg7hO2MppZMpCp+ULgIHZgOsArFMhVaj+j7BiZqa8taJ8lCX2vw6NCDHEot2lfCQ30OCg/WIXUBywpPyuXCUFqC8bSQYzl4KeuaK2M1OfNpd+3JU1uzd+MeSvFyvljWz+b7kv4ZAnN68XKy/QPn94=
+  - secure: Vk3bu9c4VijQaO8mBQboMljydKJeBAmVx5yX34JTLqXxRQDt6ODBgSGqnSHle6FpyZCHsGdXzR7NqPJNdzDZ52qSgsecDNzUF5Bhz+eiHR2bAyadiZ2B3DcT9bx8dTEJnmlmduwnXIGTRT7RD3pGX7eZ+5A65ECe+DkK4hd0rnY=
+cache:
+  directories:
+  - $HOME/.m2
+install:
+- mvn test -Dgpg.skip=true
 after_success:
-- mvn deploy --settings settings.xml
+- openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $TRAVIS_BUILD_DIR/pubring.gpg.enc
+  -out $TRAVIS_BUILD_DIR/pubring.gpg -d
+- openssl aes-256-cbc -pass pass:$ENCRYPTION_PASSWORD -in $TRAVIS_BUILD_DIR/secring.gpg.enc
+  -out $TRAVIS_BUILD_DIR/secring.gpg -d
+- mvn clean deploy --settings settings.xml -Dgpg.keyname=$GPG_KEYNAME -Dgpg.passphrase=$GPG_PASSPHRASE
+  -Dgpg.secretKeyring=$TRAVIS_BUILD_DIR/secring.gpg -Dgpg.publicKeyring=$TRAVIS_BUILD_DIR/pubring.gpg
+  -Dgpg.defaultKeyring=false
 notifications:
   slack:
     secure: Ft5aM0WPMhw29qSJ+YoSFa0z4Aq+jlmRev+Z6d0EElc9kwhAH8zLlPq0BiSmfM/IdxiQ0VGCOqOc7BsnVr65GD0H7yrGjoG2f9RCHU0xOiLSqelE33t1AC+e1R6Rkr+EgvAX8zG1+I4DyCJBvkFQnA8Qr+wbYwFiQEVP2ZOaWzY=

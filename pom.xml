@@ -6,7 +6,7 @@
 
     <groupId>org.testobject.extras.appium</groupId>
     <artifactId>appium-java-api</artifactId>
-    <version>0.0.13</version>
+    <version>0.0.14-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -53,17 +53,17 @@
         <tag>HEAD</tag>
     </scm>
 
-     <distributionManagement>
-	<repository>
-		<id>testobject-public-repo</id>
-		<url>http://nexus.testobject.org/nexus/content/repositories/testobject-public-repo</url>
-	</repository>
-	<snapshotRepository>
-		<id>testobject-public-snapshots</id>
-		<url>http://nexus.testobject.org/nexus/content/repositories/testobject-public-snapshots</url>
-	</snapshotRepository>
-    </distributionManagement>
-	
+    <distributionManagement>
+  		<snapshotRepository>
+  		  <id>ossrh</id>
+  		  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  		</snapshotRepository>
+  		<repository>
+  		  <id>ossrh</id>
+  		  <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+  		</repository>
+  	</distributionManagement>
+
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
