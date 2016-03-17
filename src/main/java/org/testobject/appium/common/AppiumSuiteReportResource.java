@@ -1,5 +1,6 @@
 package org.testobject.appium.common;
 
+import com.google.common.base.Optional;
 import com.sun.jersey.api.client.WebResource;
 import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.common.data.TestReport;
@@ -8,7 +9,6 @@ import org.testobject.appium.internal.RestClient;
 import org.testobject.appium.junit.internal.Test;
 
 import javax.ws.rs.core.MediaType;
-import java.util.Optional;
 import java.util.Set;
 
 public class AppiumSuiteReportResource {
