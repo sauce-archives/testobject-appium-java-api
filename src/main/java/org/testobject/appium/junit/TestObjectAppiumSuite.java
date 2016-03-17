@@ -96,6 +96,7 @@ public class TestObjectAppiumSuite extends Suite {
 
 	private String testObjectApiKey;
 	private long testObjectSuiteId;
+	private Optional<String> testObjectAppId;
 	private String[] testObjectDeviceIds;
 
 	private boolean runLocally;
@@ -130,6 +131,10 @@ public class TestObjectAppiumSuite extends Suite {
 
 			String suiteIdFromEnvironment = System.getenv("TESTOBJECT_SUITE_ID");
 			testObjectSuiteId = suiteIdFromEnvironment == null ? config.testObjectSuiteId() : Long.parseLong(suiteIdFromEnvironment);
+
+			Optional<String> appIdFromEnvironment = Optional.ofNullable(System.getenv("TESTOBJECT_APP_ID"));
+			Optional<String> appIdFromAnnotation = config.testObjectAppId() != 0 ? Optional.of(Long.toString(config.testObjectAppId())) : Optional.<String>empty();
+			testObjectAppId = appIdFromEnvironment.isPresent() ? appIdFromEnvironment : appIdFromAnnotation;
 
 			String deviceIdsFromEnvironment = System.getenv("TESTOBJECT_DEVICE_IDS");
 			testObjectDeviceIds = deviceIdsFromEnvironment == null ? config.testObjectDeviceIds() : deviceIdsFromEnvironment.split(", ");
@@ -169,7 +174,7 @@ public class TestObjectAppiumSuite extends Suite {
 
 			AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
 			try {
-				this.suiteReport = suiteReportResource.startSuiteReport(testObjectSuiteId, tests);
+				this.suiteReport = suiteReportResource.startSuiteReport(testObjectSuiteId, testObjectAppId, tests);
 				try {
 					super.run(notifier);
 				} finally {
