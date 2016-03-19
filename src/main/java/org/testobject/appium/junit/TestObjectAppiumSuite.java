@@ -1,5 +1,7 @@
 package org.testobject.appium.junit;
 
+import com.google.common.base.*;
+import com.google.common.base.Optional;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -11,6 +13,7 @@ import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerScheduler;
 import org.testobject.appium.common.AppiumSuiteReportResource;
 import org.testobject.appium.common.AppiumSuiteResource;
+import org.testobject.appium.common.Env;
 import org.testobject.appium.common.TestObject;
 import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.internal.RestClient;
@@ -96,6 +99,7 @@ public class TestObjectAppiumSuite extends Suite {
 
 	private String testObjectApiKey;
 	private long testObjectSuiteId;
+	private Optional<String> testObjectAppId;
 	private String[] testObjectDeviceIds;
 
 	private boolean runLocally;
@@ -107,8 +111,8 @@ public class TestObjectAppiumSuite extends Suite {
 
 		TestObject config = getConfig(clazz);
 
-		String runLocallyFromEnvironment = System.getenv("TESTOBJECT_TEST_LOCALLY");
-		runLocally = runLocallyFromEnvironment == null ? config.testLocally() : Boolean.valueOf(runLocallyFromEnvironment);
+		Optional<String> runLocallyFromEnvironment = Env.isTestLocally();
+		runLocally = runLocallyFromEnvironment.isPresent() ? Boolean.valueOf(runLocallyFromEnvironment.get()) : config.testLocally();
 
 		if (runLocally) {
 
@@ -122,20 +126,24 @@ public class TestObjectAppiumSuite extends Suite {
 
 		} else {
 
-			String endpointFromEnvironment = System.getenv("TESTOBJECT_API_ENDPOINT");
-			String testObjectApiEndpoint = endpointFromEnvironment == null ? config.testObjectApiEndpoint() : endpointFromEnvironment;
+			Optional<String> endpointFromEnvironment = Env.getApiEndpoint();
+			String testObjectApiEndpoint = endpointFromEnvironment.isPresent() ? endpointFromEnvironment.get() : config.testObjectApiEndpoint();
 
-			String apiKeyFromEnvironment = System.getenv("TESTOBJECT_API_KEY");
-			testObjectApiKey = apiKeyFromEnvironment == null ? config.testObjectApiKey() : apiKeyFromEnvironment;
+			Optional<String> apiKeyFromEnvironment = Env.getApiKey();
+			testObjectApiKey = apiKeyFromEnvironment.isPresent() ? apiKeyFromEnvironment.get() : config.testObjectApiKey();
 
-			String suiteIdFromEnvironment = System.getenv("TESTOBJECT_SUITE_ID");
-			testObjectSuiteId = suiteIdFromEnvironment == null ? config.testObjectSuiteId() : Long.parseLong(suiteIdFromEnvironment);
+			Optional<String> suiteIdFromEnvironment = Env.getSuiteId();
+			testObjectSuiteId = suiteIdFromEnvironment.isPresent() ? Long.parseLong(suiteIdFromEnvironment.get()) : config.testObjectSuiteId();
 
-			String deviceIdsFromEnvironment = System.getenv("TESTOBJECT_DEVICE_IDS");
-			testObjectDeviceIds = deviceIdsFromEnvironment == null ? config.testObjectDeviceIds() : deviceIdsFromEnvironment.split(", ");
+			Optional<String> appIdFromEnvironment = Env.getAppId();
+			Optional<String> appIdFromAnnotation = config.testObjectAppId() != 0 ? Optional.of(Long.toString(config.testObjectAppId())) : Optional.<String>absent();
+			testObjectAppId = appIdFromEnvironment.isPresent() ? appIdFromEnvironment : appIdFromAnnotation;
 
-			String timeoutFromEnvironment = System.getenv("TESTOBJECT_TIMEOUT");
-			int testObjectTimeout = timeoutFromEnvironment == null ? config.timeout() : Integer.parseInt(timeoutFromEnvironment);
+			Optional<String> deviceIdsFromEnvironment = Env.getDevicesIds();
+			testObjectDeviceIds = deviceIdsFromEnvironment.isPresent() ? deviceIdsFromEnvironment.get().split(", ") : config.testObjectDeviceIds();
+
+			Optional<String> timeoutFromEnvironment = Env.getTimeout();
+			int testObjectTimeout = timeoutFromEnvironment == null ? config.timeout() : Integer.parseInt(timeoutFromEnvironment.get());
 
 			this.client = RestClient.Builder.createClient()
 					.withUrl(testObjectApiEndpoint)
@@ -169,7 +177,7 @@ public class TestObjectAppiumSuite extends Suite {
 
 			AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
 			try {
-				this.suiteReport = suiteReportResource.startSuiteReport(testObjectSuiteId, tests);
+				this.suiteReport = suiteReportResource.startSuiteReport(testObjectSuiteId, testObjectAppId, tests);
 				try {
 					super.run(notifier);
 				} finally {

@@ -18,6 +18,8 @@ public @interface TestObject {
 
 	long testObjectSuiteId() default 0;
 
+	long testObjectAppId() default 0;
+
 	String[] testObjectDeviceIds() default {};
 
 	int timeout() default 60;

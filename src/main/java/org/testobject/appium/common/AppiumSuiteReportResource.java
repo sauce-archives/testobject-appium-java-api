@@ -1,5 +1,7 @@
 package org.testobject.appium.common;
 
+import com.google.common.base.Optional;
+import com.sun.jersey.api.client.WebResource;
 import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.common.data.TestReport;
 import org.testobject.appium.common.data.TestResult;
@@ -17,13 +19,16 @@ public class AppiumSuiteReportResource {
 		this.client = client;
 	}
 
-	public SuiteReport startSuiteReport(long suiteId, Set<Test> tests) {
-		return client
+	public SuiteReport startSuiteReport(long suiteId, Optional<String> appId, Set<Test> tests) {
+		WebResource webResource = client
 				.path("suites").path(Long.toString(suiteId))
 				.path("reports")
-				.path("start")
-				.type(MediaType.APPLICATION_JSON_TYPE)
-				.post(SuiteReport.class, tests);
+				.path("start");
+		if(appId.isPresent()){
+			webResource = webResource.queryParam("appId", appId.get());
+		}
+
+		return webResource.type(MediaType.APPLICATION_JSON_TYPE).post(SuiteReport.class, tests);
 	}
 
 	public SuiteReport finishSuiteReport(long suiteId, SuiteReport.Id suiteReportId) {
