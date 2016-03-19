@@ -145,9 +145,6 @@ public class TestObjectAppiumSuite extends Suite {
 			Optional<String> timeoutFromEnvironment = Env.getTimeout();
 			int testObjectTimeout = timeoutFromEnvironment == null ? config.timeout() : Integer.parseInt(timeoutFromEnvironment.get());
 
-			Optional<String> timeoutFromEnvironment = Env.getTimeout();
-			int testObjectTimeout = timeoutFromEnvironment.isPresent() ? Integer.parseInt(timeoutFromEnvironment.get()) : config.timeout();
-
 			this.client = RestClient.Builder.createClient()
 					.withUrl(testObjectApiEndpoint)
 					.withToken(testObjectApiKey)
