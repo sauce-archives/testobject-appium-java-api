@@ -93,6 +93,7 @@
     <scm>
         <connection>scm:git:git@github.com:testobject/testobject-java-api.git</connection>
         <tag>HEAD</tag>
+        <url>https://github.com/testobject/testobject-appium-java-api/</url>
     </scm>
 
     <distributionManagement>
@@ -117,7 +118,6 @@
             <groupId>io.appium</groupId>
             <artifactId>java-client</artifactId>
             <version>3.3.0</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
