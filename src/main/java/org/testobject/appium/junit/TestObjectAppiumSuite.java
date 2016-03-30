@@ -143,7 +143,7 @@ public class TestObjectAppiumSuite extends Suite {
 			testObjectDeviceIds = deviceIdsFromEnvironment.isPresent() ? deviceIdsFromEnvironment.get().split(", ") : config.testObjectDeviceIds();
 
 			Optional<String> timeoutFromEnvironment = Env.getTimeout();
-			int testObjectTimeout = timeoutFromEnvironment == null ? config.timeout() : Integer.parseInt(timeoutFromEnvironment.get());
+			int testObjectTimeout = timeoutFromEnvironment.isPresent() ?  Integer.parseInt(timeoutFromEnvironment.get()) : config.timeout();
 
 			this.client = RestClient.Builder.createClient()
 					.withUrl(testObjectApiEndpoint)
