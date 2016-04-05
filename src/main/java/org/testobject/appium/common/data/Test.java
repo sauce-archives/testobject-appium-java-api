@@ -1,16 +1,9 @@
-package org.testobject.appium.junit.internal;
+package org.testobject.appium.common.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.junit.runner.Description;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Test {
-
-    private static final Pattern METHOD_AND_CLASS_NAME_PATTERN_STRICT = Pattern.compile("(.+)[\\[\\(](.*)[\\]\\)]");
-    private static final Pattern METHOD_AND_CLASS_NAME_PATTERN_LOOSE = Pattern.compile("(.+)");
 
     private final String className;
     private final String methodName;
@@ -56,38 +49,6 @@ public class Test {
         result = 31 * result + deviceId.hashCode();
 
         return result;
-    }
-
-    public static Test from(Description testDescription) {
-
-        String className;
-        String methodName;
-        String deviceId = null;
-
-        Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN_STRICT.matcher(testDescription.getMethodName());
-
-        if (matcher.matches()) {
-
-            className = testDescription.getClassName();
-            methodName = matcher.group(1);
-            deviceId = matcher.group(2);
-
-        } else {
-
-            matcher = METHOD_AND_CLASS_NAME_PATTERN_LOOSE.matcher(testDescription.getMethodName());
-
-            if (matcher.matches()){
-
-                className = testDescription.getClassName();
-                methodName = matcher.group(1);
-
-            } else {
-                throw new RuntimeException("unable to match against method name: " + testDescription.getMethodName());
-            }
-
-        }
-
-        return new Test(className, methodName, deviceId);
     }
 
 }

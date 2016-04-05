@@ -1,7 +1,6 @@
 package org.testobject.appium.junit;
 
 import com.google.common.base.Optional;
-import com.sun.jersey.api.client.WebResource;
 import io.appium.java_client.AppiumDriver;
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
@@ -15,7 +14,8 @@ import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.common.data.TestReport;
 import org.testobject.appium.common.data.TestResult;
 import org.testobject.appium.internal.RestClient;
-import org.testobject.appium.junit.internal.Test;
+import org.testobject.appium.common.data.Test;
+import org.testobject.appium.junit.internal.Util;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -48,7 +48,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	@Override
 	protected void starting(Description description) {
-		this.test = Test.from(description);
+		this.test = Util.from(description);
 	}
 
 	@Override protected void succeeded(Description description) {
@@ -92,7 +92,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		if (suiteReport == null) {
 			createSuiteReportAndTestReport(passed);
 		} else {
-			updateSuiteReport(suiteReport, Test.from(description), passed);
+			updateSuiteReport(suiteReport, Util.from(description), passed);
 		}
 	}
 

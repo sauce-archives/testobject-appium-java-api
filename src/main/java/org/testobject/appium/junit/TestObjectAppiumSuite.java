@@ -1,6 +1,5 @@
 package org.testobject.appium.junit;
 
-import com.google.common.base.*;
 import com.google.common.base.Optional;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
@@ -17,7 +16,8 @@ import org.testobject.appium.common.Env;
 import org.testobject.appium.common.TestObject;
 import org.testobject.appium.common.data.SuiteReport;
 import org.testobject.appium.internal.RestClient;
-import org.testobject.appium.junit.internal.Test;
+import org.testobject.appium.common.data.Test;
+import org.testobject.appium.junit.internal.Util;
 
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -230,7 +230,7 @@ public class TestObjectAppiumSuite extends Suite {
 		Set<Test> tests = new HashSet<Test>();
 		for (Description childDescription : description.getChildren()) {
 			for (Description testDescription : childDescription.getChildren()) {
-				tests.add(Test.from(testDescription));
+				tests.add(Util.from(testDescription));
 			}
 		}
 

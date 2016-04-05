@@ -7,10 +7,8 @@ import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 import org.testobject.appium.common.AppiumResource;
-import org.testobject.appium.common.TestObjectCapabilities;
 import org.testobject.appium.internal.RestClient;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;

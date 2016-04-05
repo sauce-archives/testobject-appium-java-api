@@ -3,10 +3,10 @@ package org.testobject.appium.common;
 import com.google.common.base.Optional;
 import com.sun.jersey.api.client.WebResource;
 import org.testobject.appium.common.data.SuiteReport;
+import org.testobject.appium.common.data.Test;
 import org.testobject.appium.common.data.TestReport;
 import org.testobject.appium.common.data.TestResult;
 import org.testobject.appium.internal.RestClient;
-import org.testobject.appium.junit.internal.Test;
 
 import javax.ws.rs.core.MediaType;
 import java.util.Set;

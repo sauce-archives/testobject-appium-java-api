@@ -3,7 +3,6 @@ package org.testobject.appium.common.data;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Optional;
-import org.testobject.appium.junit.internal.Test;
 
 import java.util.Set;
 
@@ -28,9 +27,6 @@ public class SuiteReport {
 		return id;
 	}
 
-
-	// TODO REMOVE COMMENT
-	// pulling Test object
 	public Optional<TestReport.Id> getTestReportId(Test test) {
 		for (TestReport testReport : testReports) {
 			if (testReport.getTest().equals(test)) {

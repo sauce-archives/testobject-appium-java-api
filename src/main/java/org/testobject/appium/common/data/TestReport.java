@@ -2,7 +2,6 @@ package org.testobject.appium.common.data;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.testobject.appium.junit.internal.Test;
 
 public class TestReport {
 
