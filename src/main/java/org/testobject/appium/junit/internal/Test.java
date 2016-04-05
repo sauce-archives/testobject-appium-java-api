@@ -3,7 +3,6 @@ package org.testobject.appium.junit.internal;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.junit.runner.Description;
-import org.testng.ITestResult;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -84,38 +83,6 @@ public class Test {
 
             } else {
                 throw new RuntimeException("unable to match against method name: " + testDescription.getMethodName());
-            }
-
-        }
-
-        return new Test(className, methodName, deviceId);
-    }
-
-    public static Test from(ITestResult iTestResult) {
-
-        String className;
-        String methodName;
-        String deviceId = null;
-
-        Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN_STRICT.matcher(iTestResult.getMethod().getMethodName());
-
-        if (matcher.matches()) {
-
-            className = iTestResult.getTestClass().getName();
-            methodName = matcher.group(1);
-            deviceId = matcher.group(2);
-
-        } else {
-
-            matcher = METHOD_AND_CLASS_NAME_PATTERN_LOOSE.matcher(iTestResult.getMethod().getMethodName());
-
-            if (matcher.matches()){
-
-                className = iTestResult.getTestClass().getName();
-                methodName = matcher.group(1);
-
-            } else {
-                throw new RuntimeException("unable to match against method name: " + iTestResult.getMethod().getMethodName());
             }
 
         }
