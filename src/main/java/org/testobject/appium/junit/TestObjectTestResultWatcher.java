@@ -155,6 +155,22 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	}
 
+	public String getTestDeviceId() {
+
+		if (suiteReport == null) {
+			return null;
+		}
+
+		Optional<String> testDeviceId = suiteReport.getTestDeviceId(this.test);
+
+		if (!testDeviceId.isPresent()) {
+			throw new IllegalStateException("test device not present");
+		}
+
+		return testDeviceId.get();
+
+	}
+
 	public String getApiKey() {
 		return apiKey;
 	}
