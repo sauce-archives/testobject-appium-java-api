@@ -1,6 +1,7 @@
 package org.testobject.appium.junit.internal;
 
 import org.junit.runner.Description;
+import org.testobject.rest.api.appium.common.data.Test;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -11,7 +12,7 @@ public class Util {
 	private static final Pattern METHOD_AND_CLASS_NAME_PATTERN_LOOSE = Pattern.compile("(.+)");
 
 
-	public static org.testobject.appium.common.data.Test from(Description testDescription) {
+	public static Test from(Description testDescription) {
 
 		String className;
 		String methodName;
@@ -40,6 +41,6 @@ public class Util {
 
 		}
 
-		return new org.testobject.appium.common.data.Test(className, methodName, deviceId);
+		return new Test(className, methodName, deviceId);
 	}
 }

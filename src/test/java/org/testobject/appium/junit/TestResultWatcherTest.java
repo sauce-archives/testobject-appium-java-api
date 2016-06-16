@@ -13,7 +13,7 @@ import java.net.URL;
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
+import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
 
 public class TestResultWatcherTest {
 

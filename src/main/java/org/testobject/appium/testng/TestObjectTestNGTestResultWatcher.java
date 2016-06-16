@@ -6,14 +6,14 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
-import org.testobject.appium.common.AppiumResource;
-import org.testobject.appium.internal.RestClient;
+import org.testobject.rest.api.RestClient;
+import org.testobject.rest.api.resource.AppiumResource;
 
 import java.net.URL;
 
-import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
-import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
-import static org.testobject.appium.common.TestObjectCapabilities.toAppiumEndpointURL;
+import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
+import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
+import static org.testobject.rest.api.appium.common.TestObjectCapabilities.toAppiumEndpointURL;
 
 public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 

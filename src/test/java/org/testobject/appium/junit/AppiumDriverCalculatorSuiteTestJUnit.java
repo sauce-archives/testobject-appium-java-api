@@ -12,10 +12,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testobject.appium.common.TestObject;
-import org.testobject.appium.common.TestObjectCapabilities;
+import org.testobject.rest.api.appium.common.TestObject;
+import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
+
 
 @TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 123)
 @RunWith(TestObjectAppiumSuite.class)
