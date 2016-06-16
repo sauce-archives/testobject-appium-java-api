@@ -107,13 +107,6 @@
   		</repository>
   	</distributionManagement>
 
-    <repositories>
-        <repository>
-            <id>testobject</id>
-            <url>http://nexus.testobject.org/nexus/content/repositories/testobject-public-repo</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
