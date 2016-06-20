@@ -7,22 +7,22 @@ import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.testobject.appium.common.AppiumResource;
-import org.testobject.appium.common.AppiumSuiteReportResource;
-import org.testobject.appium.common.TestObjectCapabilities;
-import org.testobject.appium.common.data.SuiteReport;
-import org.testobject.appium.common.data.TestReport;
-import org.testobject.appium.common.data.TestResult;
-import org.testobject.appium.internal.RestClient;
-import org.testobject.appium.common.data.Test;
 import org.testobject.appium.junit.internal.Util;
+import org.testobject.rest.api.RestClient;
+import org.testobject.rest.api.appium.common.TestObjectCapabilities;
+import org.testobject.rest.api.appium.common.data.SuiteReport;
+import org.testobject.rest.api.appium.common.data.Test;
+import org.testobject.rest.api.appium.common.data.TestReport;
+import org.testobject.rest.api.appium.common.data.TestResult;
+import org.testobject.rest.api.resource.AppiumResource;
+import org.testobject.rest.api.resource.AppiumSuiteReportResource;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
-import static org.testobject.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
-import static org.testobject.appium.common.TestObjectCapabilities.toAppiumEndpointURL;
+import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
+import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
+import static org.testobject.rest.api.appium.common.TestObjectCapabilities.toAppiumEndpointURL;
 
 public class TestObjectTestResultWatcher extends TestWatcher {
 
