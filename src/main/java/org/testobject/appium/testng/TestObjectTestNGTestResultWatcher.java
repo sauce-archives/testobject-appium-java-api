@@ -90,7 +90,7 @@ public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 
 	private void createSuiteReportAndTestReport(boolean passed) {
 		AppiumResource appiumResource = new AppiumResource(client);
-		appiumResource.updateTestReportStatus(remoteWebDriver.getSessionId(), passed);
+		appiumResource.updateTestReportStatus(remoteWebDriver.getSessionId().toString(), passed);
 	}
 
 	public void setAppiumDriver(AppiumDriver appiumDriver) {

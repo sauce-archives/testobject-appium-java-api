@@ -1,7 +1,7 @@
 package org.testobject.appium.junit;
 
-import com.google.common.base.Optional;
 import io.appium.java_client.AppiumDriver;
+import jersey.repackaged.com.google.common.base.Optional;
 import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
@@ -98,16 +98,16 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
 		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
-		if (!testReportId.isPresent()) {
+		if (testReportId.orNull() == null) {
 			throw new IllegalArgumentException("unknown test " + test);
 		}
 
-		new AppiumSuiteReportResource(client).finishTestReport(suiteId, suiteReport.getId(), testReportId.get(), new TestResult(passed));
+		new AppiumSuiteReportResource(client).finishTestReport(suiteId, suiteReport.getId(), testReportId.orNull(), new TestResult(passed));
 	}
 
 	private void createSuiteReportAndTestReport(boolean passed) {
 		AppiumResource appiumResource = new AppiumResource(client);
-		appiumResource.updateTestReportStatus(remoteWebDriver.getSessionId(), passed);
+		appiumResource.updateTestReportStatus(remoteWebDriver.getSessionId().toString(), passed);
 	}
 
 	public void setAppiumDriver(AppiumDriver appiumDriver) {
@@ -147,11 +147,11 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(this.test);
 
-		if (!testReportId.isPresent()) {
+		if (testReportId.orNull() == null) {
 			throw new IllegalStateException("test report not present");
 		}
 
-		return testReportId.get().toString();
+		return testReportId.orNull().toString();
 
 	}
 
@@ -163,11 +163,11 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 		Optional<String> testDeviceId = suiteReport.getTestDeviceId(this.test);
 
-		if (!testDeviceId.isPresent()) {
+		if (testDeviceId.orNull() == null) {
 			throw new IllegalStateException("test device not present");
 		}
 
-		return testDeviceId.get();
+		return testDeviceId.orNull();
 
 	}
 
