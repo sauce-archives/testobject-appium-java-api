@@ -13,7 +13,6 @@ import java.net.URL;
 
 import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
 import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
-import static org.testobject.rest.api.appium.common.TestObjectCapabilities.toAppiumEndpointURL;
 
 public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 
@@ -80,7 +79,7 @@ public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 			remoteWebDriver.getScreenshotAs(OutputType.FILE);
 		}
 
-		if (!toAppiumEndpointURL(TESTOBJECT_API_ENDPOINT).equals(driverRemoteAddress)) {
+		if (!driverRemoteAddress.toString().contains(".testobject.")) {
 			return;
 		}
 
