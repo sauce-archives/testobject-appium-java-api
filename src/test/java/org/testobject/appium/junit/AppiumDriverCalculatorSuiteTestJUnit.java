@@ -4,7 +4,6 @@ import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,9 +17,9 @@ import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 import java.net.MalformedURLException;
 
 
-@TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 123)
+@TestObject(testObjectApiKey = "7CDE94EFFE3E4EF4A773DB2728688C53", testObjectSuiteId = 9447)
 @RunWith(TestObjectAppiumSuite.class)
-@Ignore // remove @Ignore to run this test
+//@Ignore // remove @Ignore to run this test
 public class AppiumDriverCalculatorSuiteTestJUnit {
 
 	@Rule
