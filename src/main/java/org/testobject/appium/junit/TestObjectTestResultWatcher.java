@@ -22,7 +22,6 @@ import java.net.URL;
 
 import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
 import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
-import static org.testobject.rest.api.appium.common.TestObjectCapabilities.toAppiumEndpointURL;
 
 public class TestObjectTestResultWatcher extends TestWatcher {
 
@@ -85,7 +84,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 			remoteWebDriver.getScreenshotAs(OutputType.FILE);
 		}
 
-		if (!toAppiumEndpointURL(baseUrl).equals(driverRemoteAddress)) {
+		if (!driverRemoteAddress.toString().contains(".testobject.")) {
 			return;
 		}
 
