@@ -22,5 +22,4 @@ public final class TestObjectCapabilities {
 	public static final String TESTOBJECT_DEVICE_ALLOCATION_SLEEP_TIME = "testobject_device_session_sleep_time";
 	public static final String TESTOBJECT_USER_ID = "testobject_user_id";
 	public static final String TESTOBJECT_PROJECT_ID = "testobject_project_id";
-	public static final String TESTOBJECT_REPORT_ID = "testobject_report_id";
 }
