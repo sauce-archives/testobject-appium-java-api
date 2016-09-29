@@ -1,5 +1,6 @@
 package org.testobject.appium;
 
+@SuppressWarnings("unused")
 public final class TestObjectCapabilities {
 	public static final String TESTOBJECT_API_KEY = "testobject_api_key";
 	public static final String TESTOBJECT_DEVICE = "testobject_device";
