@@ -23,7 +23,7 @@ import java.net.MalformedURLException;
 public class AppiumDriverCalculatorSuiteTestJUnit {
 
 	@Rule
-	public TestObjectTestResultWatcher watcher = new TestObjectTestResultWatcher();
+	public TestObjectAppiumSuiteWatcher watcher = new TestObjectAppiumSuiteWatcher();
 
 	private AppiumDriver driver;
 
@@ -55,7 +55,11 @@ public class AppiumDriverCalculatorSuiteTestJUnit {
 		buttonEquals.click();
 
 		(new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
+	}
 
+	@Test
+	public void pageSource() {
+		driver.getPageSource();
 	}
 
 }

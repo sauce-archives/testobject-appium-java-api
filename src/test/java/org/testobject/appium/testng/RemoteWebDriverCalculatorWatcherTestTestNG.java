@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 @Listeners({ TestObjectTestNGTestResultWatcher.class })
-public class RemoteWebDriverCalculatorWatcherTestTestNG implements RemoteWebDriverProvider {
+public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWatcherProvider {
 
 	private RemoteWebDriver driver;
 
@@ -53,12 +53,15 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements RemoteWebDriv
 	}
 
 	@Override
-	public RemoteWebDriver getRemoteWebDriver() {
+	public RemoteWebDriver getDriver() {
 		return driver;
 	}
 
 	@Override
-	public URL getRemoteAddress() {
+	public URL getApiEndpoint() {
 		return TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT;
 	}
+
+	@Override
+	public boolean getIsLocalTest() { return false; }
 }

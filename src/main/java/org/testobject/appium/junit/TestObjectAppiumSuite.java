@@ -10,7 +10,6 @@ import org.junit.runners.Suite;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 import org.junit.runners.model.RunnerScheduler;
-import org.testobject.appium.junit.internal.Util;
 import org.testobject.rest.api.RestClient;
 import org.testobject.rest.api.appium.common.Env;
 import org.testobject.rest.api.appium.common.TestObject;
@@ -23,6 +22,8 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+
+import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_ENDPOINT;
 
 public class TestObjectAppiumSuite extends Suite {
 
@@ -45,9 +46,9 @@ public class TestObjectAppiumSuite extends Suite {
 		protected List<TestRule> getTestRules(Object target) {
 			List<TestRule> testRules = super.getTestRules(target);
 			for (TestRule testRule : testRules) {
-				if (testRule instanceof TestObjectTestResultWatcher) {
-					TestObjectTestResultWatcher resultWatcher = (TestObjectTestResultWatcher) testRule;
-					resultWatcher.configureForSuiteExecution(testObjectApiKey, testObjectSuiteId, suiteReport);
+				if (testRule instanceof TestObjectAppiumSuiteWatcher) {
+					TestObjectAppiumSuiteWatcher resultWatcher = (TestObjectAppiumSuiteWatcher) testRule;
+					resultWatcher.configure(testObjectApiKey, testObjectSuiteId, suiteReport, runLocally);
 				}
 			}
 
@@ -127,7 +128,8 @@ public class TestObjectAppiumSuite extends Suite {
 		} else {
 
 			Optional<String> endpointFromEnvironment = Env.getApiEndpoint();
-			String testObjectApiEndpoint = endpointFromEnvironment.isPresent() ? endpointFromEnvironment.get() : config.testObjectApiEndpoint();
+			String endpointFromConfig = config.testObjectApiEndpoint().equals("") ? TESTOBJECT_API_ENDPOINT.toString() : config.testObjectApiEndpoint();
+			String testObjectApiEndpoint = endpointFromEnvironment.isPresent() ? endpointFromEnvironment.get() : endpointFromConfig;
 
 			Optional<String> apiKeyFromEnvironment = Env.getApiKey();
 			testObjectApiKey = apiKeyFromEnvironment.isPresent() ? apiKeyFromEnvironment.get() : config.testObjectApiKey();
@@ -230,7 +232,7 @@ public class TestObjectAppiumSuite extends Suite {
 		Set<Test> tests = new HashSet<Test>();
 		for (Description childDescription : description.getChildren()) {
 			for (Description testDescription : childDescription.getChildren()) {
-				tests.add(Util.from(testDescription));
+				tests.add(TestParser.from(testDescription));
 			}
 		}
 
