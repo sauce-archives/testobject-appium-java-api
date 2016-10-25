@@ -128,7 +128,7 @@ public class TestObjectAppiumSuite extends Suite {
 		} else {
 
 			Optional<String> endpointFromEnvironment = Env.getApiEndpoint();
-			String endpointFromConfig = config.testObjectApiEndpoint().equals("") ? TESTOBJECT_API_ENDPOINT.toString() : config.testObjectApiEndpoint();
+			String endpointFromConfig = config.testObjectApiEndpoint().isEmpty() ? TESTOBJECT_API_ENDPOINT.toString() : config.testObjectApiEndpoint();
 			String testObjectApiEndpoint = endpointFromEnvironment.isPresent() ? endpointFromEnvironment.get() : endpointFromConfig;
 
 			Optional<String> apiKeyFromEnvironment = Env.getApiKey();

@@ -42,19 +42,23 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
         this.test = TestParser.from(description);
     }
 
-    @Override protected void succeeded(Description description) {
+    @Override
+    protected void succeeded(Description description) {
         reporter.processAndReportResult(true, TestParser.from(description));
     }
 
-    @Override protected void failed(Throwable e, Description description) {
+    @Override
+    protected void failed(Throwable e, Description description) {
         reporter.processAndReportResult(false, TestParser.from(description));
     }
 
-    @Override protected void skipped(AssumptionViolatedException e, Description description) {
+    @Override
+    protected void skipped(AssumptionViolatedException e, Description description) {
         reporter.processAndReportResult(false, TestParser.from(description));
     }
 
-    @Override protected void finished(Description description) {
+    @Override
+    protected void finished(Description description) {
         reporter.close();
     }
 
