@@ -1,33 +1,36 @@
-package org.testobject.appium.testng;
+package org.testobject.appium.junit;
 
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.*;
 import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+public class AppiumDriverCalculatorIntermediateTestJUnit {
 
-@Listeners({ TestObjectTestNGTestResultWatcher.class })
-public class AppiumDriverCalculatorWatcherTestTestNG implements TestObjectWatcherProvider {
+    @Rule
+    public TestObjectTestResultWatcher watcher = new TestObjectTestResultWatcher();
 
     private AppiumDriver driver;
 
-    @BeforeMethod
-    public void beforeTest() throws MalformedURLException {
-
+    @Before
+    public void setup() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability("testobject_api_key", "7CDE94EFFE3E4EF4A773DB2728688C53");
+        capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, "7CDE94EFFE3E4EF4A773DB2728688C53");
         capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_DEVICE, "Motorola_Moto_E_2nd_gen_real");
 
-        driver = new AndroidDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities);
+        driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
+        watcher.setAppiumDriver(driver);
 
+        System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
+        System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
     }
 
     @Test
@@ -44,22 +47,6 @@ public class AppiumDriverCalculatorWatcherTestTestNG implements TestObjectWatche
         buttonEquals.click();
 
         (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
-
     }
 
-    @AfterMethod
-    public void tearDown() {
-        driver.quit();
-    }
-
-    @Override
-    public AppiumDriver getDriver() {
-        return this.driver;
-    }
-
-    @Override
-    public URL getApiEndpoint() { return TestObjectCapabilities.TESTOBJECT_API_ENDPOINT; }
-
-    @Override
-    public boolean getIsLocalTest() { return false; }
 }

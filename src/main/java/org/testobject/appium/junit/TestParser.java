@@ -1,4 +1,4 @@
-package org.testobject.appium.junit.internal;
+package org.testobject.appium.junit;
 
 import org.junit.runner.Description;
 import org.testobject.rest.api.appium.common.data.Test;
@@ -6,7 +6,7 @@ import org.testobject.rest.api.appium.common.data.Test;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Util {
+class TestParser {
 
 	private static final Pattern METHOD_AND_CLASS_NAME_PATTERN_STRICT = Pattern.compile("(.+)[\\[\\(](.*)[\\]\\)]");
 	private static final Pattern METHOD_AND_CLASS_NAME_PATTERN_LOOSE = Pattern.compile("(.+)");
