@@ -17,7 +17,7 @@ import java.net.URL;
 @Listeners({ TestObjectTestNGTestResultWatcher.class })
 public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWatcherProvider {
 
-	private RemoteWebDriver driver;
+	private TestObjectTestNGTestProvider provider = TestObjectTestNGTestProvider.newInstance();
 
 	@BeforeMethod
 	public void beforeTest() throws MalformedURLException {
@@ -26,42 +26,39 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWat
 
 		capabilities.setCapability("testobject_api_key", "YOUR_API_KEY");
 		capabilities.setCapability("testobject_app_id", "1");
-		capabilities.setCapability("testobject_device", "YOUR_DEVICE_ID");
+		capabilities.setCapability("testobject_device", "YOUR_DEVICE");
 
-		driver = new RemoteWebDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
+		URL url = TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT;
+		provider.setRemoteWebDriver(new RemoteWebDriver(url, capabilities), url);
+		provider.setLocalTest(false);
 
-		System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
-		System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
+		System.out.println("Test live view: " + remoteWebDriver.getCapabilities().getCapability("testobject_test_live_view_url"));
+		System.out.println("Test report: " + remoteWebDriver.getCapabilities().getCapability("testobject_test_report_url"));
 
 	}
 
 	@Test
 	public void twoPlusTwoOperation() {
 
-		WebElement buttonTwo = driver.findElement(By.id("net.ludeke.calculator:id/digit2"));
-		WebElement buttonPlus = driver.findElement(By.id("net.ludeke.calculator:id/plus"));
-		WebElement buttonEquals = driver.findElement(By.id("net.ludeke.calculator:id/equal"));
-		WebElement resultField = driver.findElement(By.xpath("//android.widget.EditText[1]"));
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
+
+		WebElement buttonTwo = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/digit2"));
+		WebElement buttonPlus = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/plus"));
+		WebElement buttonEquals = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/equal"));
+		WebElement resultField = remoteWebDriver.findElement(By.xpath("//android.widget.EditText[1]"));
 
 		buttonTwo.click();
 		buttonPlus.click();
 		buttonTwo.click();
 		buttonEquals.click();
 
-		(new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
+		(new WebDriverWait(remoteWebDriver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
 
 	}
 
 	@Override
-	public RemoteWebDriver getDriver() {
-		return driver;
+	public TestObjectTestNGTestProvider getProvider() {
+		return provider;
 	}
-
-	@Override
-	public URL getApiEndpoint() {
-		return TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT;
-	}
-
-	@Override
-	public boolean getIsLocalTest() { return false; }
 }

@@ -1,6 +1,5 @@
 package org.testobject.appium.testng;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
@@ -16,11 +15,17 @@ public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 	public void onTestStart(ITestResult testResult) {
 		super.onTestStart(testResult);
 
-		if (testResult.getInstance() instanceof TestObjectWatcherProvider) {
-			TestObjectWatcherProvider provider = (TestObjectWatcherProvider) testResult.getInstance();
-			URL apiEndpoint = provider.getApiEndpoint();
-			reporter = new IntermediateReporter(apiEndpoint, provider.getIsLocalTest());
-			reporter.setRemoteWebDriver(provider.getDriver());
+		Object instance = testResult.getInstance();
+
+		if (instance instanceof TestObjectWatcherProvider) {
+
+			TestObjectWatcherProvider watcherProvider = ((TestObjectWatcherProvider) instance);
+			TestObjectTestNGTestProvider provider = watcherProvider.getProvider();
+
+			URL apiEndpoint = provider.getEndpoint();
+			reporter = new IntermediateReporter(apiEndpoint, provider.isLocalTest());
+			reporter.setRemoteWebDriver(provider.getRemoteWebDriver());
+
 		} else {
 			throw new IllegalStateException("Test must implement TestObjectWatcherProvider");
 		}
