@@ -29,7 +29,7 @@ public class AppiumDriverCalculatorWatcherTestTestNG implements TestObjectWatche
 		capabilities.setCapability("testobject_api_key", "YOUR_API_KEY");
 		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_DEVICE, "YOUR_DEVICE");
 
-		provider.setAppiumDriver(new AndroidDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities));
+		provider.setDriver(new AndroidDriver(new URL("https://app.testobject.com:443/api/appium/wd/hub"), capabilities));
 		provider.setLocalTest(false);
 	}
 

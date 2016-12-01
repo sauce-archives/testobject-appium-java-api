@@ -29,7 +29,7 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWat
 		capabilities.setCapability("testobject_device", "YOUR_DEVICE");
 
 		URL url = TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT;
-		provider.setRemoteWebDriver(new RemoteWebDriver(url, capabilities), url);
+		provider.setDriver(new RemoteWebDriver(url, capabilities));
 		provider.setLocalTest(false);
 
 		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();

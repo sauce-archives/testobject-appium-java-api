@@ -22,7 +22,7 @@ public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 			TestObjectWatcherProvider watcherProvider = ((TestObjectWatcherProvider) instance);
 			TestObjectTestNGTestProvider provider = watcherProvider.getProvider();
 
-			URL apiEndpoint = provider.getEndpoint();
+			URL apiEndpoint = provider.getAPIEndpoint();
 			reporter = new IntermediateReporter(apiEndpoint, provider.isLocalTest());
 			reporter.setRemoteWebDriver(provider.getRemoteWebDriver());
 

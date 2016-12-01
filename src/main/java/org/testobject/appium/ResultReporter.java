@@ -51,7 +51,7 @@ public abstract class ResultReporter {
 
     public void processResult(boolean passed) {
         if (driver == null) {
-            throw new IllegalStateException("appium driver must be set using setRemoteWebDriver method");
+            throw new IllegalStateException("appium driver must be set using setDriver method");
         }
 
         if (!passed) {
