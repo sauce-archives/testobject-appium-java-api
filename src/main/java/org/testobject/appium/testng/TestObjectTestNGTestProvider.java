@@ -25,10 +25,7 @@ public class TestObjectTestNGTestProvider {
 	}
 
 	public AppiumDriver getAppiumDriver() {
-		if (remoteWebDriver != null) {
-			return (AppiumDriver) remoteWebDriver;
-		}
-		return null;
+		return (AppiumDriver) remoteWebDriver;
 	}
 
 	public void setAppiumDriver(AppiumDriver appiumDriver) {
