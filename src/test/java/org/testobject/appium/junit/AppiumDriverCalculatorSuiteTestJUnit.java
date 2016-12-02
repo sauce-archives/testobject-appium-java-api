@@ -17,7 +17,7 @@ import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 import java.net.MalformedURLException;
 
 
-@TestObject(testObjectApiKey = "09003F0958BB4C1EA05DEF172AF0EBBE", testObjectSuiteId = 7)
+@TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 123)
 @RunWith(TestObjectAppiumSuite.class)
 //@Ignore // remove @Ignore to run this test
 public class AppiumDriverCalculatorSuiteTestJUnit {
