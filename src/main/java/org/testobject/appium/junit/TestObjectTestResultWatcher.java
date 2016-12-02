@@ -18,7 +18,6 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	public TestObjectTestResultWatcher() {
 		provider = TestObjectListenerProvider.newInstance();
-		reporter = new IntermediateReporter(provider);
 	}
 
 	@Override
@@ -42,7 +41,8 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 	}
 
 	public void setAppiumDriver(RemoteWebDriver driver) {
-		provider.setDriver(driver, TestObjectCapabilities.TESTOBJECT_API_ENDPOINT);
+		provider.setDriver(driver);
+		reporter = new IntermediateReporter(provider);
 	}
 
 	public void setAppiumDriver(RemoteWebDriver driver, URL apiEndpoint) {

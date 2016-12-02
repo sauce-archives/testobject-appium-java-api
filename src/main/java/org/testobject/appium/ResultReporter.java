@@ -19,7 +19,8 @@ public abstract class ResultReporter {
 	}
 
 	private void initClient() {
-		String apiEndpoint = this.testObjectListenerProvider.getAppiumDriver().toString();
+		String apiEndpoint = this.testObjectListenerProvider.getAPIEndpoint().toString();
+
 		RemoteWebDriver remoteWebDriver = testObjectListenerProvider.getRemoteWebDriver();
 
 		this.client = RestClient.Builder.createClient()

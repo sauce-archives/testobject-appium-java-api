@@ -24,7 +24,6 @@ public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 			TestObjectListenerProvider provider = watcherProvider.getProvider();
 
 			reporter = new IntermediateReporter(provider);
-
 		} else {
 			throw new IllegalStateException("Test must implement TestObjectWatcherProvider");
 		}

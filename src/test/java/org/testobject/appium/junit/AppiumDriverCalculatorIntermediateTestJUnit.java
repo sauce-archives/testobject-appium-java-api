@@ -23,8 +23,8 @@ public class AppiumDriverCalculatorIntermediateTestJUnit {
     public void setup() {
         DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, "7CDE94EFFE3E4EF4A773DB2728688C53");
-        capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_DEVICE, "Motorola_Moto_E_2nd_gen_real");
+        capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, "09003F0958BB4C1EA05DEF172AF0EBBE");
+        capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_DEVICE, "Motorola_Moto_E_2nd_gen_free");
 
         driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
         watcher.setAppiumDriver(driver);
