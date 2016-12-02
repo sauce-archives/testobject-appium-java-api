@@ -29,7 +29,6 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 
 	public TestObjectAppiumSuiteWatcher() {
 		provider = TestObjectListenerProvider.newInstance();
-		reporter = new SuiteReporter(provider);
 	}
 
 	@Override
@@ -63,9 +62,12 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 
 	public void setRemoteWebDriver(RemoteWebDriver driver, URL apiEndpoint) {
 		provider.setDriver(driver, apiEndpoint);
+		reporter.setProvider(provider);
 	}
 
 	public void configure(String apiKey, long suiteId, SuiteReport suiteReport, boolean isLocalTest) {
+		reporter = new SuiteReporter();
+
 		setApiKey(apiKey);
 		setSuiteId(suiteId);
 		setSuiteReport(suiteReport);

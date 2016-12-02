@@ -11,17 +11,20 @@ public abstract class ResultReporter {
 
 	protected RestClient client;
 
-	private TestObjectListenerProvider testObjectListenerProvider;
+	protected TestObjectListenerProvider provider;
 
-	public ResultReporter(TestObjectListenerProvider testObjectListenerProvider) {
-		this.testObjectListenerProvider = testObjectListenerProvider;
+	protected ResultReporter() {
+	}
+
+	public ResultReporter(TestObjectListenerProvider provider) {
+		this.provider = provider;
 		initClient();
 	}
 
-	private void initClient() {
-		String apiEndpoint = this.testObjectListenerProvider.getAPIEndpoint().toString();
+	protected void initClient() {
+		String apiEndpoint = this.provider.getAPIEndpoint().toString();
 
-		RemoteWebDriver remoteWebDriver = testObjectListenerProvider.getRemoteWebDriver();
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
 
 		this.client = RestClient.Builder.createClient()
 				.withUrl(apiEndpoint)
@@ -31,7 +34,7 @@ public abstract class ResultReporter {
 	}
 
 	public void close() {
-		RemoteWebDriver remoteWebDriver = testObjectListenerProvider.getRemoteWebDriver();
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
 		if (remoteWebDriver == null) {
 			return;
 		}
@@ -42,11 +45,11 @@ public abstract class ResultReporter {
 
 	public void createSuiteReportAndTestReport(boolean passed) {
 		AppiumResource appiumResource = new AppiumResource(client);
-		appiumResource.updateTestReportStatus(testObjectListenerProvider.getRemoteWebDriver().getSessionId().toString(), passed);
+		appiumResource.updateTestReportStatus(provider.getRemoteWebDriver().getSessionId().toString(), passed);
 	}
 
 	public void processResult(boolean passed) {
-		RemoteWebDriver remoteWebDriver = testObjectListenerProvider.getRemoteWebDriver();
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
 		if (remoteWebDriver == null) {
 			throw new IllegalStateException("appium driver must be set using setDriver method");
 		}
@@ -55,13 +58,13 @@ public abstract class ResultReporter {
 			requestScreenshotAndPageSource();
 		}
 
-		if (testObjectListenerProvider.isLocalTest()) {
+		if (provider.isLocalTest()) {
 			return;
 		}
 	}
 
 	public void requestScreenshotAndPageSource() {
-		RemoteWebDriver remoteWebDriver = testObjectListenerProvider.getRemoteWebDriver();
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
 		remoteWebDriver.getPageSource();
 		remoteWebDriver.getScreenshotAs(OutputType.FILE);
 	}

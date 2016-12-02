@@ -13,20 +13,11 @@ public class SuiteReporter extends ResultReporter {
 
 	private long suiteId;
 
-	public SuiteReporter(TestObjectListenerProvider provider) {
-		super(provider);
-	}
-
-	public SuiteReport getSuiteReport() {
-		return suiteReport;
+	public SuiteReporter() {
 	}
 
 	public void setSuiteReport(SuiteReport suiteReport) {
 		this.suiteReport = suiteReport;
-	}
-
-	public long getSuiteId() {
-		return suiteId;
 	}
 
 	public void setSuiteId(long suiteId) {
@@ -58,5 +49,10 @@ public class SuiteReporter extends ResultReporter {
 
 	public SuiteReport suiteReport() {
 		return suiteReport;
+	}
+
+	public void setProvider(TestObjectListenerProvider provider) {
+		super.provider = provider;
+		super.initClient();
 	}
 }
