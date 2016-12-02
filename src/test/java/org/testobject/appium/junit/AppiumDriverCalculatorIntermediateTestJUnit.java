@@ -27,7 +27,7 @@ public class AppiumDriverCalculatorIntermediateTestJUnit {
         capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_DEVICE, "Motorola_Moto_E_2nd_gen_free");
 
         driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
-        watcher.setAppiumDriver(driver);
+        watcher.setRemoteWebDriver(driver);
 
         System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
         System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));

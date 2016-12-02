@@ -34,7 +34,7 @@ public class RemoteWebDriverCalculatorSuiteTestJUnit {
         capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID, watcher.getTestReportId());
 
         driver = new RemoteWebDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
-        watcher.setAppiumDriver(driver);
+        watcher.setRemoteWebDriver(driver);
 
         System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
         System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));

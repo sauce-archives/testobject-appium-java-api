@@ -40,12 +40,12 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 		reporter.close();
 	}
 
-	public void setAppiumDriver(RemoteWebDriver driver) {
+	public void setRemoteWebDriver(RemoteWebDriver driver) {
 		provider.setDriver(driver);
 		reporter = new IntermediateReporter(provider);
 	}
 
-	public void setAppiumDriver(RemoteWebDriver driver, URL apiEndpoint) {
+	public void setRemoteWebDriver(RemoteWebDriver driver, URL apiEndpoint) {
 		provider.setDriver(driver, apiEndpoint);
 	}
 

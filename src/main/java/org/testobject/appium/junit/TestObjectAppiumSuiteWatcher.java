@@ -57,11 +57,11 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 		reporter.close();
 	}
 
-	public void setAppiumDriver(RemoteWebDriver driver) {
-		provider.setDriver(driver);
+	public void setRemoteWebDriver(RemoteWebDriver driver) {
+		setRemoteWebDriver(driver, TestObjectCapabilities.TESTOBJECT_API_ENDPOINT);
 	}
 
-	public void setAppiumDriver(RemoteWebDriver driver, URL apiEndpoint) {
+	public void setRemoteWebDriver(RemoteWebDriver driver, URL apiEndpoint) {
 		provider.setDriver(driver, apiEndpoint);
 	}
 
@@ -72,20 +72,20 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 		setIsLocalTest(isLocalTest);
 	}
 
-	public void setIsLocalTest(boolean isLocalTest){
+	public void setIsLocalTest(boolean isLocalTest) {
 		this.isLocalTest = isLocalTest;
 		provider.setLocalTest(isLocalTest);
 	}
 
-	public void setApiKey(String apiKey){
+	public void setApiKey(String apiKey) {
 		this.apiKey = apiKey;
 	}
 
-	public void setSuiteId(long suiteId){
+	public void setSuiteId(long suiteId) {
 		reporter.setSuiteId(suiteId);
 	}
 
-	public void setSuiteReport(SuiteReport suiteReport){
+	public void setSuiteReport(SuiteReport suiteReport) {
 		reporter.setSuiteReport(suiteReport);
 	}
 
