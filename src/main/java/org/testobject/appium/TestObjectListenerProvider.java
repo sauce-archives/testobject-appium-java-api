@@ -1,4 +1,4 @@
-package org.testobject.appium.testng;
+package org.testobject.appium;
 
 import io.appium.java_client.AppiumDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -6,19 +6,19 @@ import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
 import java.net.URL;
 
-public class TestObjectTestNGTestProvider {
+public class TestObjectListenerProvider {
 
 	private RemoteWebDriver remoteWebDriver;
 
 	private URL apiEndpoint;
 
-	private boolean isLocalTest;
+	private boolean isLocalTest = false;
 
-	public static TestObjectTestNGTestProvider newInstance() {
-		return new TestObjectTestNGTestProvider();
+	public static TestObjectListenerProvider newInstance() {
+		return new TestObjectListenerProvider();
 	}
 
-	private TestObjectTestNGTestProvider() {
+	private TestObjectListenerProvider() {
 	}
 
 	public RemoteWebDriver getRemoteWebDriver() {

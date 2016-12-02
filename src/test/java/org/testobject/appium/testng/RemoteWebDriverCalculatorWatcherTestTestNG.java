@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
+import org.testobject.appium.TestObjectListenerProvider;
 import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
@@ -17,7 +18,7 @@ import java.net.URL;
 @Listeners({ TestObjectTestNGTestResultWatcher.class })
 public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWatcherProvider {
 
-	private TestObjectTestNGTestProvider provider = TestObjectTestNGTestProvider.newInstance();
+	private TestObjectListenerProvider provider = TestObjectListenerProvider.newInstance();
 
 	@BeforeMethod
 	public void beforeTest() throws MalformedURLException {
@@ -58,7 +59,7 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWat
 	}
 
 	@Override
-	public TestObjectTestNGTestProvider getProvider() {
+	public TestObjectListenerProvider getProvider() {
 		return provider;
 	}
 }

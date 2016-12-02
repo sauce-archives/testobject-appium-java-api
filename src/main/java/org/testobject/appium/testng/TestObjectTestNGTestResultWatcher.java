@@ -4,6 +4,7 @@ import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 import org.testobject.appium.IntermediateReporter;
+import org.testobject.appium.TestObjectListenerProvider;
 
 import java.net.URL;
 
@@ -20,11 +21,9 @@ public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 		if (instance instanceof TestObjectWatcherProvider) {
 
 			TestObjectWatcherProvider watcherProvider = ((TestObjectWatcherProvider) instance);
-			TestObjectTestNGTestProvider provider = watcherProvider.getProvider();
+			TestObjectListenerProvider provider = watcherProvider.getProvider();
 
-			URL apiEndpoint = provider.getAPIEndpoint();
-			reporter = new IntermediateReporter(apiEndpoint, provider.isLocalTest());
-			reporter.setRemoteWebDriver(provider.getRemoteWebDriver());
+			reporter = new IntermediateReporter(provider);
 
 		} else {
 			throw new IllegalStateException("Test must implement TestObjectWatcherProvider");

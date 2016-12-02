@@ -7,41 +7,56 @@ import org.testobject.rest.api.appium.common.data.TestReport;
 import org.testobject.rest.api.appium.common.data.TestResult;
 import org.testobject.rest.api.resource.AppiumSuiteReportResource;
 
-import java.net.URL;
-
 public class SuiteReporter extends ResultReporter {
-    private SuiteReport suiteReport;
-    private long suiteId;
 
-    public SuiteReporter(URL apiEndpoint, boolean isLocalTest, long suiteId, SuiteReport suiteReport) {
-        super(apiEndpoint, isLocalTest);
-        this.suiteId = suiteId;
-        this.suiteReport = suiteReport;
-    }
+	private SuiteReport suiteReport;
 
-    public void processAndReportResult(boolean passed, Test test) {
-        processResult(passed);
-        reportResult(passed, test);
-    }
+	private long suiteId;
 
-    public void reportResult(boolean passed, Test test) {
-        if (suiteReport == null) {
-            createSuiteReportAndTestReport(passed);
-        } else {
-            updateSuiteReport(suiteReport, test, passed);
-        }
-    }
+	public SuiteReporter(TestObjectListenerProvider provider) {
+		super(provider);
+	}
 
-    private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
-        Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
-        if (testReportId.orNull() == null) {
-            throw new IllegalArgumentException("unknown test " + test);
-        }
+	public SuiteReport getSuiteReport() {
+		return suiteReport;
+	}
 
-        new AppiumSuiteReportResource(client).finishTestReport(suiteId, suiteReport.getId(), testReportId.orNull(), new TestResult(passed));
-    }
+	public void setSuiteReport(SuiteReport suiteReport) {
+		this.suiteReport = suiteReport;
+	}
 
-    public SuiteReport suiteReport() {
-        return suiteReport;
-    }
+	public long getSuiteId() {
+		return suiteId;
+	}
+
+	public void setSuiteId(long suiteId) {
+		this.suiteId = suiteId;
+	}
+
+	public void processAndReportResult(boolean passed, Test test) {
+		processResult(passed);
+		reportResult(passed, test);
+	}
+
+	public void reportResult(boolean passed, Test test) {
+		if (suiteReport == null) {
+			createSuiteReportAndTestReport(passed);
+		} else {
+			updateSuiteReport(suiteReport, test, passed);
+		}
+	}
+
+	private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
+		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
+		if (testReportId.orNull() == null) {
+			throw new IllegalArgumentException("unknown test " + test);
+		}
+
+		new AppiumSuiteReportResource(client).finishTestReport(suiteId, suiteReport.getId(), testReportId.orNull(), new TestResult
+				(passed));
+	}
+
+	public SuiteReport suiteReport() {
+		return suiteReport;
+	}
 }
