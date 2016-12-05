@@ -1,15 +1,7 @@
 package org.testobject.appium.testng;
 
-import org.openqa.selenium.remote.RemoteWebDriver;
-
-import java.net.URL;
+import org.testobject.appium.TestObjectListenerProvider;
 
 public interface TestObjectWatcherProvider {
-
-    RemoteWebDriver getDriver();
-
-    URL getApiEndpoint();
-
-    boolean getIsLocalTest();
-
+	TestObjectListenerProvider getProvider();
 }

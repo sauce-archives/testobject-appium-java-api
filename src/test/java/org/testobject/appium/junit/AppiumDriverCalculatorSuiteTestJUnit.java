@@ -17,7 +17,7 @@ import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 import java.net.MalformedURLException;
 
 
-@TestObject(testObjectApiKey = "7CDE94EFFE3E4EF4A773DB2728688C53", testObjectSuiteId = 9447)
+@TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 123)
 @RunWith(TestObjectAppiumSuite.class)
 //@Ignore // remove @Ignore to run this test
 public class AppiumDriverCalculatorSuiteTestJUnit {
@@ -35,7 +35,7 @@ public class AppiumDriverCalculatorSuiteTestJUnit {
 		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID, watcher.getTestReportId());
 
 		driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
-		watcher.setAppiumDriver(driver);
+		watcher.setRemoteWebDriver(driver);
 
 		System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
 		System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));

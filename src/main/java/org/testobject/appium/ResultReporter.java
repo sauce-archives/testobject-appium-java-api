@@ -5,67 +5,67 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testobject.rest.api.RestClient;
 import org.testobject.rest.api.resource.AppiumResource;
 
-import java.net.URL;
-
 import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
 
 public abstract class ResultReporter {
-    protected RemoteWebDriver driver;
-    protected RestClient client;
-    private URL apiEndpoint;
-    private boolean isLocalTest;
 
-    public ResultReporter(URL apiEndpoint, boolean isLocalTest) {
-        this.apiEndpoint = apiEndpoint;
-        this.isLocalTest = isLocalTest;
-    }
+	protected RestClient client;
 
-    public void setRemoteWebDriver(RemoteWebDriver driver) {
-        if (driver == null) {
-            throw new IllegalArgumentException("driver must not be null");
-        }
+	protected TestObjectListenerProvider provider;
 
-        this.driver = driver;
-        String apiEndpoint = this.apiEndpoint.toString();
+	protected ResultReporter() {
+	}
 
-        this.client = RestClient.Builder.createClient()
-                .withUrl(apiEndpoint)
-                .withToken((String) driver.getCapabilities().getCapability(TESTOBJECT_API_KEY))
-                .path(RestClient.REST_APPIUM_PATH)
-                .build();
-    }
+	public ResultReporter(TestObjectListenerProvider provider) {
+		this.provider = provider;
+		initClient();
+	}
 
-    public void close() {
-        if (driver == null) {
-            return;
-        }
+	protected void initClient() {
+		String apiEndpoint = this.provider.getAPIEndpoint().toString();
 
-        driver.quit();
-        client.close();
-    }
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
 
-    public void createSuiteReportAndTestReport(boolean passed) {
-        AppiumResource appiumResource = new AppiumResource(client);
-        appiumResource.updateTestReportStatus(driver.getSessionId().toString(), passed);
-    }
+		this.client = RestClient.Builder.createClient()
+				.withUrl(apiEndpoint)
+				.withToken((String) remoteWebDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY))
+				.path(RestClient.REST_APPIUM_PATH)
+				.build();
+	}
 
-    public void processResult(boolean passed) {
-        if (driver == null) {
-            throw new IllegalStateException("appium driver must be set using setRemoteWebDriver method");
-        }
+	public void close() {
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
+		if (remoteWebDriver == null) {
+			return;
+		}
 
-        if (!passed) {
-            requestScreenshotAndPageSource();
-        }
+		remoteWebDriver.quit();
+		client.close();
+	}
 
-        if (isLocalTest) {
-            return;
-        }
-    }
+	public void createSuiteReportAndTestReport(boolean passed) {
+		AppiumResource appiumResource = new AppiumResource(client);
+		appiumResource.updateTestReportStatus(provider.getRemoteWebDriver().getSessionId().toString(), passed);
+	}
 
+	public void processResult(boolean passed) {
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
+		if (remoteWebDriver == null) {
+			throw new IllegalStateException("appium driver must be set using setDriver method");
+		}
 
-    public void requestScreenshotAndPageSource() {
-        driver.getPageSource();
-        driver.getScreenshotAs(OutputType.FILE);
-    }
+		if (!passed) {
+			requestScreenshotAndPageSource();
+		}
+
+		if (provider.isLocalTest()) {
+			return;
+		}
+	}
+
+	public void requestScreenshotAndPageSource() {
+		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
+		remoteWebDriver.getPageSource();
+		remoteWebDriver.getScreenshotAs(OutputType.FILE);
+	}
 }
