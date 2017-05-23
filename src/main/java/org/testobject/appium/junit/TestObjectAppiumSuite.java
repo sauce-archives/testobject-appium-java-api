@@ -1,6 +1,7 @@
 package org.testobject.appium.junit;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -70,6 +71,7 @@ public class TestObjectAppiumSuite extends Suite {
 		private final ExecutorService executor;
 
 		public ThreadPoolScheduler(int numberOfThreads, int timeout, TimeUnit timeoutUnit) {
+			Preconditions.checkArgument(numberOfThreads > 0, "Cannot make a thread pool with " + numberOfThreads + " threads");
 			this.timeout = timeout;
 			this.timeoutUnit = timeoutUnit;
 
@@ -160,6 +162,10 @@ public class TestObjectAppiumSuite extends Suite {
 				deviceIds = new HashSet<String>(Arrays.asList(testObjectDeviceIds));
 			}
 
+			if (deviceIds.isEmpty()) {
+				throw new IllegalStateException("No devices selected for suite " + testObjectSuiteId);
+			}
+
 			this.perDeviceRunners = toRunners(clazz, deviceIds);
 
 			this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), testObjectTimeout, config.timeoutUnit()));
@@ -206,14 +212,9 @@ public class TestObjectAppiumSuite extends Suite {
 	}
 
 	private Set<String> getRemoteDeviceIds() {
-		if (testObjectDeviceIds != null && testObjectDeviceIds.length > 0) {
-			return new HashSet<String>(Arrays.asList(testObjectDeviceIds));
-		}
-
 		AppiumSuiteResource suiteReportResource = new AppiumSuiteResource(client);
-		Set<String> deviceIds = suiteReportResource.readSuiteDeviceIds(testObjectSuiteId);
 
-		return deviceIds;
+		return suiteReportResource.readSuiteDeviceIds(testObjectSuiteId);
 	}
 
 	private Set<String> getLocalDeviceId() {
