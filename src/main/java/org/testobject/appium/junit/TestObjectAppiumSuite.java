@@ -1,6 +1,7 @@
 package org.testobject.appium.junit;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -70,6 +71,7 @@ public class TestObjectAppiumSuite extends Suite {
 		private final ExecutorService executor;
 
 		public ThreadPoolScheduler(int numberOfThreads, int timeout, TimeUnit timeoutUnit) {
+			Preconditions.checkArgument(numberOfThreads > 0, "Cannot make a thread pool with " + numberOfThreads + " threads");
 			this.timeout = timeout;
 			this.timeoutUnit = timeoutUnit;
 
