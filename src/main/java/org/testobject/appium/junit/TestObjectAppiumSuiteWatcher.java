@@ -23,6 +23,8 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 
 	private boolean isLocalTest;
 
+	private URL appiumURL;
+
 	private SuiteReporter reporter;
 
 	private TestObjectListenerProvider provider;
@@ -65,13 +67,14 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 		reporter.setProvider(provider);
 	}
 
-	public void configure(String apiKey, long suiteId, SuiteReport suiteReport, boolean isLocalTest) {
+	public void configure(String apiKey, long suiteId, SuiteReport suiteReport, boolean isLocalTest, URL appiumURL) {
 		reporter = new SuiteReporter();
 
 		setApiKey(apiKey);
 		setSuiteId(suiteId);
 		setSuiteReport(suiteReport);
 		setIsLocalTest(isLocalTest);
+		setAppiumURL(appiumURL);
 	}
 
 	public void setIsLocalTest(boolean isLocalTest) {
@@ -90,6 +93,8 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 	public void setSuiteReport(SuiteReport suiteReport) {
 		reporter.setSuiteReport(suiteReport);
 	}
+
+	public void setAppiumURL(URL appiumURL) { this.appiumURL = appiumURL; }
 
 	public String getTestReportId() {
 
@@ -121,7 +126,7 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 		if (isLocalTest) {
 			return new URL("http://0.0.0.0:4723/wd/hub");
 		} else {
-			return TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT;
+			return appiumURL;
 		}
 	}
 }

@@ -14,11 +14,13 @@ import org.junit.runners.model.RunnerScheduler;
 import org.testobject.rest.api.RestClient;
 import org.testobject.rest.api.appium.common.Env;
 import org.testobject.rest.api.appium.common.TestObject;
+import org.testobject.rest.api.appium.common.data.DataCenterSuite;
 import org.testobject.rest.api.appium.common.data.SuiteReport;
 import org.testobject.rest.api.appium.common.data.Test;
 import org.testobject.rest.api.resource.AppiumSuiteReportResource;
 import org.testobject.rest.api.resource.AppiumSuiteResource;
 
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -31,16 +33,20 @@ public class TestObjectAppiumSuite extends Suite {
 	private class PerDeviceRunner extends BlockJUnit4ClassRunner {
 
 		private final String deviceId;
+		private final String dataCenterId;
+		private final URL appiumURL;
 
-		public PerDeviceRunner(Class<?> clazz, String deviceId) throws InitializationError {
+		public PerDeviceRunner(Class<?> clazz, String deviceId, String dataCenterId, URL appiumURL) throws InitializationError {
 			super(clazz);
 			this.deviceId = deviceId;
+			this.dataCenterId = dataCenterId;
+			this.appiumURL = appiumURL;
 		}
 
 		@Override
 		protected Description describeChild(FrameworkMethod method) {
-			return Description
-					.createTestDescription(getTestClass().getJavaClass(), testName(method) + "[" + deviceId + "]", method.getAnnotations());
+			String descriptionName = testName(method) + " " + deviceId + " " + dataCenterId;
+			return Description.createTestDescription(getTestClass().getJavaClass(), descriptionName, method.getAnnotations());
 		}
 
 		@Override
@@ -49,7 +55,7 @@ public class TestObjectAppiumSuite extends Suite {
 			for (TestRule testRule : testRules) {
 				if (testRule instanceof TestObjectAppiumSuiteWatcher) {
 					TestObjectAppiumSuiteWatcher resultWatcher = (TestObjectAppiumSuiteWatcher) testRule;
-					resultWatcher.configure(testObjectApiKey, testObjectSuiteId, suiteReport, runLocally);
+					resultWatcher.configure(testObjectApiKey, testObjectSuiteId, suiteReport, runLocally, appiumURL);
 				}
 			}
 
@@ -103,7 +109,6 @@ public class TestObjectAppiumSuite extends Suite {
 	private String testObjectApiKey;
 	private long testObjectSuiteId;
 	private Optional<String> testObjectAppId;
-	private String[] testObjectDeviceIds;
 
 	private boolean runLocally;
 
@@ -118,15 +123,11 @@ public class TestObjectAppiumSuite extends Suite {
 		runLocally = runLocallyFromEnvironment.isPresent() ? Boolean.valueOf(runLocallyFromEnvironment.get()) : config.testLocally();
 
 		if (runLocally) {
-
 			this.client = null;
+			this.perDeviceRunners = new LinkedList<Runner>();
+			this.perDeviceRunners.add(new PerDeviceRunner(clazz, null, null, null));
 
-			Set<String> deviceIds = getLocalDeviceId();
-
-			this.perDeviceRunners = toRunners(clazz, deviceIds);
-
-			this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), timeoutDefault, timeunitDefault));
-
+			this.setScheduler(new ThreadPoolScheduler(1, timeoutDefault, timeunitDefault));
 		} else {
 
 			Optional<String> endpointFromEnvironment = Env.getApiEndpoint();
@@ -143,9 +144,6 @@ public class TestObjectAppiumSuite extends Suite {
 			Optional<String> appIdFromAnnotation = config.testObjectAppId() != 0 ? Optional.of(Long.toString(config.testObjectAppId())) : Optional.<String>absent();
 			testObjectAppId = appIdFromEnvironment.isPresent() ? appIdFromEnvironment : appIdFromAnnotation;
 
-			Optional<String> deviceIdsFromEnvironment = Env.getDevicesIds();
-			testObjectDeviceIds = deviceIdsFromEnvironment.isPresent() ? deviceIdsFromEnvironment.get().split(", ") : config.testObjectDeviceIds();
-
 			Optional<String> timeoutFromEnvironment = Env.getTimeout();
 			int testObjectTimeout = timeoutFromEnvironment.isPresent() ?  Integer.parseInt(timeoutFromEnvironment.get()) : config.timeout();
 
@@ -155,20 +153,11 @@ public class TestObjectAppiumSuite extends Suite {
 					.path(RestClient.REST_APPIUM_PATH)
 					.build();
 
-			Set<String> deviceIds;
-			if (testObjectDeviceIds.length == 0) {
-				deviceIds = getRemoteDeviceIds();
-			} else {
-				deviceIds = new HashSet<String>(Arrays.asList(testObjectDeviceIds));
-			}
+			Set<DataCenterSuite> dataCenterSuites = getDataCenterSuites();
 
-			if (deviceIds.isEmpty()) {
-				throw new IllegalStateException("No devices selected for suite " + testObjectSuiteId);
-			}
+			this.perDeviceRunners = toRunners(clazz, dataCenterSuites);
 
-			this.perDeviceRunners = toRunners(clazz, deviceIds);
-
-			this.setScheduler(new ThreadPoolScheduler(deviceIds.size(), testObjectTimeout, config.timeoutUnit()));
+			this.setScheduler(new ThreadPoolScheduler(perDeviceRunners.size(), testObjectTimeout, config.timeoutUnit()));
 
 		}
 	}
@@ -211,21 +200,23 @@ public class TestObjectAppiumSuite extends Suite {
 		return testobject;
 	}
 
-	private Set<String> getRemoteDeviceIds() {
+	private Set<DataCenterSuite> getDataCenterSuites() {
 		AppiumSuiteResource suiteReportResource = new AppiumSuiteResource(client);
-
-		return suiteReportResource.readSuiteDeviceIds(testObjectSuiteId);
+		return suiteReportResource.readDataCenterSuites(testObjectSuiteId);
 	}
 
-	private Set<String> getLocalDeviceId() {
-		return new HashSet<String>(Collections.singletonList("Local_device"));
-	}
+	private List<Runner> toRunners(Class<?> clazz, Collection<DataCenterSuite> dataCenterSuites) throws InitializationError {
 
-	private List<Runner> toRunners(Class<?> clazz, Set<String> deviceIds) throws InitializationError {
-		List<Runner> runners = new ArrayList<Runner>(deviceIds.size());
-		for (String deviceId : deviceIds) {
-			runners.add(new PerDeviceRunner(clazz, deviceId));
+		List<Runner> runners = new LinkedList<Runner>();
+		for (DataCenterSuite dataCenterSuite : dataCenterSuites) {
+			URL appiumURL = dataCenterSuite.getDataCenterURL();
+			String dataCenterId = dataCenterSuite.dataCenterId;
+			for (String deviceId : dataCenterSuite.getDeviceDescriptorIds()) {
+				runners.add(new PerDeviceRunner(clazz, deviceId, dataCenterId, appiumURL));
+			}
 		}
+
+		Preconditions.checkArgument(runners.size() > 0, "No devices were specified for this suite");
 		return runners;
 	}
 
