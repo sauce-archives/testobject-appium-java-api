@@ -47,6 +47,7 @@ public class TestObjectTestResultWatcher extends TestWatcher {
 
 	public void setRemoteWebDriver(RemoteWebDriver driver, URL apiEndpoint) {
 		provider.setDriver(driver, apiEndpoint);
+		reporter = new IntermediateReporter(provider);
 	}
 
 	public void setIsLocalTest(boolean isLocalTest) {
