@@ -8,39 +8,14 @@ import java.util.regex.Pattern;
 
 class TestParser {
 
-	private static final Pattern METHOD_AND_CLASS_NAME_PATTERN_STRICT = Pattern.compile("(.+)[\\[\\(](.*)[\\]\\)]");
-	private static final Pattern METHOD_AND_CLASS_NAME_PATTERN_LOOSE = Pattern.compile("(.+)");
-
-
 	public static Test from(Description testDescription) {
+		String className = testDescription.getClassName();
 
-		String className;
-		String methodName;
-		String deviceId = null;
+		String[] descriptionName = testDescription.getMethodName().split(" ");
+		String methodName = descriptionName[0];
+		String deviceId = descriptionName[1];
+		String dataCenterId = descriptionName[2];
 
-		Matcher matcher = METHOD_AND_CLASS_NAME_PATTERN_STRICT.matcher(testDescription.getMethodName());
-
-		if (matcher.matches()) {
-
-			className = testDescription.getClassName();
-			methodName = matcher.group(1);
-			deviceId = matcher.group(2);
-
-		} else {
-
-			matcher = METHOD_AND_CLASS_NAME_PATTERN_LOOSE.matcher(testDescription.getMethodName());
-
-			if (matcher.matches()){
-
-				className = testDescription.getClassName();
-				methodName = matcher.group(1);
-
-			} else {
-				throw new RuntimeException("unable to match against method name: " + testDescription.getMethodName());
-			}
-
-		}
-
-		return new Test(className, methodName, deviceId);
+		return new Test(className, methodName, deviceId, dataCenterId);
 	}
 }
