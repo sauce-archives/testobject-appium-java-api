@@ -1,7 +1,5 @@
 package org.testobject.appium.junit;
 
-import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runner.Runner;
@@ -77,7 +75,9 @@ public class TestObjectAppiumSuite extends Suite {
 		private final ExecutorService executor;
 
 		public ThreadPoolScheduler(int numberOfThreads, int timeout, TimeUnit timeoutUnit) {
-			Preconditions.checkArgument(numberOfThreads > 0, "Cannot make a thread pool with " + numberOfThreads + " threads");
+			if(numberOfThreads < 1) {
+				throw new RuntimeException("Cannot make a thread pool with " + numberOfThreads + " threads");
+			}
 			this.timeout = timeout;
 			this.timeoutUnit = timeoutUnit;
 
@@ -132,20 +132,20 @@ public class TestObjectAppiumSuite extends Suite {
 
 			Optional<String> endpointFromEnvironment = Env.getApiEndpoint();
 			String endpointFromConfig = config.testObjectApiEndpoint().isEmpty() ? TESTOBJECT_API_ENDPOINT.toString() : config.testObjectApiEndpoint();
-			String testObjectApiEndpoint = endpointFromEnvironment.isPresent() ? endpointFromEnvironment.get() : endpointFromConfig;
+			String testObjectApiEndpoint = endpointFromEnvironment.orElse(endpointFromConfig);
 
 			Optional<String> apiKeyFromEnvironment = Env.getApiKey();
-			testObjectApiKey = apiKeyFromEnvironment.isPresent() ? apiKeyFromEnvironment.get() : config.testObjectApiKey();
+			testObjectApiKey = apiKeyFromEnvironment.orElseGet(config::testObjectApiKey);
 
 			Optional<String> suiteIdFromEnvironment = Env.getSuiteId();
-			testObjectSuiteId = suiteIdFromEnvironment.isPresent() ? Long.parseLong(suiteIdFromEnvironment.get()) : config.testObjectSuiteId();
+			testObjectSuiteId = suiteIdFromEnvironment.map(Long::parseLong).orElseGet(config::testObjectSuiteId);
 
 			Optional<String> appIdFromEnvironment = Env.getAppId();
-			Optional<String> appIdFromAnnotation = config.testObjectAppId() != 0 ? Optional.of(Long.toString(config.testObjectAppId())) : Optional.<String>absent();
+			Optional<String> appIdFromAnnotation = config.testObjectAppId() != 0 ? Optional.of(Long.toString(config.testObjectAppId())) : Optional.empty();
 			testObjectAppId = appIdFromEnvironment.isPresent() ? appIdFromEnvironment : appIdFromAnnotation;
 
 			Optional<String> timeoutFromEnvironment = Env.getTimeout();
-			int testObjectTimeout = timeoutFromEnvironment.isPresent() ?  Integer.parseInt(timeoutFromEnvironment.get()) : config.timeout();
+			int testObjectTimeout = timeoutFromEnvironment.map(Integer::parseInt).orElseGet(config::timeout);
 
 			this.client = RestClient.Builder.createClient()
 					.withUrl(testObjectApiEndpoint)
@@ -216,7 +216,9 @@ public class TestObjectAppiumSuite extends Suite {
 			}
 		}
 
-		Preconditions.checkArgument(runners.size() > 0, "No devices were specified for this suite");
+		if(runners.size() < 1) {
+			throw new RuntimeException("No devices were specified for this suite");
+		}
 		return runners;
 	}
 
