@@ -20,4 +20,4 @@ TestObject Appium Java API Client is available from
 
 ## Usage
 
-For an introduction on how to use the utilities, please see our [documentation](https://help.testobject.com/docs/tools/appium/setups/suite-setup/junit/).
+For an introduction on how to use the utilities, please see [The Sauce Labs Cookbook Home](https://wiki.saucelabs.com/display/DOCS/The+Sauce+Labs+Cookbook+Home).
