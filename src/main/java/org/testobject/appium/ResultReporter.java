@@ -3,7 +3,7 @@ package org.testobject.appium;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testobject.rest.api.RestClient;
-import org.testobject.rest.api.resource.AppiumResource;
+import org.testobject.rest.api.resource.v2.AppiumSessionResource;
 
 import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
 
@@ -44,8 +44,8 @@ public abstract class ResultReporter {
 	}
 
 	public void createSuiteReportAndTestReport(boolean passed) {
-		AppiumResource appiumResource = new AppiumResource(client);
-		appiumResource.updateTestReportStatus(provider.getRemoteWebDriver().getSessionId().toString(), passed);
+		AppiumSessionResource appiumSessionResource = new AppiumSessionResource(client);
+		appiumSessionResource.updateTestReportStatus(provider.getRemoteWebDriver().getSessionId().toString(), passed);
 	}
 
 	public void processResult(boolean passed) {
