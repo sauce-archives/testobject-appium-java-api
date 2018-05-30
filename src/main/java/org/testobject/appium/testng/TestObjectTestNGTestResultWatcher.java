@@ -6,8 +6,6 @@ import org.testng.TestListenerAdapter;
 import org.testobject.appium.IntermediateReporter;
 import org.testobject.appium.TestObjectListenerProvider;
 
-import java.net.URL;
-
 public class TestObjectTestNGTestResultWatcher extends TestListenerAdapter {
 
 	private IntermediateReporter reporter;

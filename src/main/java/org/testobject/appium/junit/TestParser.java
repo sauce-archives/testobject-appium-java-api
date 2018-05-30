@@ -3,9 +3,6 @@ package org.testobject.appium.junit;
 import org.junit.runner.Description;
 import org.testobject.rest.api.appium.common.data.Test;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 class TestParser {
 
 	public static Test from(Description testDescription) {

@@ -153,7 +153,7 @@ public class TestObjectAppiumSuite extends Suite {
 			this.client = RestClient.Builder.createClient()
 					.withUrl(testObjectApiEndpoint)
 					.withToken(testObjectApiKey)
-					.path(RestClient.REST_APPIUM_PATH)
+					.path(RestClient.REST)
 					.build();
 
 			Set<DataCenterSuite> dataCenterSuites = getDataCenterSuites();

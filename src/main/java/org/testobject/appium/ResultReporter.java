@@ -5,6 +5,8 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testobject.rest.api.RestClient;
 import org.testobject.rest.api.resource.v2.AppiumSessionResource;
 
+import javax.ws.rs.core.Response;
+
 import static org.testobject.rest.api.appium.common.TestObjectCapabilities.TESTOBJECT_API_KEY;
 
 public abstract class ResultReporter {
@@ -29,7 +31,7 @@ public abstract class ResultReporter {
 		this.client = RestClient.Builder.createClient()
 				.withUrl(apiEndpoint)
 				.withToken((String) remoteWebDriver.getCapabilities().getCapability(TESTOBJECT_API_KEY))
-				.path(RestClient.REST_APPIUM_PATH)
+				.path(RestClient.REST)
 				.build();
 	}
 
@@ -45,7 +47,10 @@ public abstract class ResultReporter {
 
 	public void createSuiteReportAndTestReport(boolean passed) {
 		AppiumSessionResource appiumSessionResource = new AppiumSessionResource(client);
-		appiumSessionResource.updateTestReportStatus(provider.getRemoteWebDriver().getSessionId().toString(), passed);
+		Response response = appiumSessionResource.updateTestReportStatus(provider.getRemoteWebDriver().getSessionId().toString(), passed);
+		if (response.getStatus() != 204) {
+			System.out.println("Test result might not be updated on Sauce Labs RDC (TestObject). Status: " + response.getStatus());
+		}
 	}
 
 	public void processResult(boolean passed) {

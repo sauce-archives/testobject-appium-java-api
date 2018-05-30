@@ -1,10 +1,9 @@
 package org.testobject.appium.testng;
 
+import io.appium.java_client.MobileElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -14,6 +13,8 @@ import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import static org.testng.Assert.assertEquals;
 
 @Listeners({ TestObjectTestNGTestResultWatcher.class })
 public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWatcherProvider {
@@ -28,6 +29,7 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWat
 		capabilities.setCapability("testobject_api_key", "YOUR_API_KEY");
 		capabilities.setCapability("testobject_app_id", "1");
 		capabilities.setCapability("testobject_device", "YOUR_DEVICE");
+		capabilities.setCapability("platformName", "Android or iOS");
 
 		URL url = TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT;
 		provider.setDriver(new RemoteWebDriver(url, capabilities));
@@ -44,17 +46,18 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWat
 
 		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
 
-		WebElement buttonTwo = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/digit2"));
-		WebElement buttonPlus = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/plus"));
-		WebElement buttonEquals = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/equal"));
-		WebElement resultField = remoteWebDriver.findElement(By.xpath("//android.widget.EditText[1]"));
+		MobileElement buttonTwo = (MobileElement) (remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/digit2")));
+		MobileElement buttonPlus = (MobileElement) (remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/plus")));
+		MobileElement buttonEquals = (MobileElement) (remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/equal")));
+		By resultFieldBy = By.xpath("//android.widget.EditText[1]");
 
 		buttonTwo.click();
 		buttonPlus.click();
 		buttonTwo.click();
 		buttonEquals.click();
 
-		(new WebDriverWait(remoteWebDriver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
+		WebDriverWait wait = new WebDriverWait(remoteWebDriver, 30);
+		assertEquals(wait.until(driver -> driver.findElement(resultFieldBy).getText().trim()), "4");
 
 	}
 

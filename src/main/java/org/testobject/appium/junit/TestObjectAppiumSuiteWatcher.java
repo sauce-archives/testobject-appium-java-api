@@ -1,7 +1,6 @@
 package org.testobject.appium.junit;
 
 import jersey.repackaged.com.google.common.base.Optional;
-import org.junit.internal.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -49,11 +48,6 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 	}
 
 	@Override
-	protected void skipped(AssumptionViolatedException e, Description description) {
-		reporter.processAndReportResult(false, TestParser.from(description));
-	}
-
-	@Override
 	protected void finished(Description description) {
 		reporter.close();
 	}
@@ -94,7 +88,9 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 		reporter.setSuiteReport(suiteReport);
 	}
 
-	public void setAppiumURL(URL appiumURL) { this.appiumURL = appiumURL; }
+	public void setAppiumURL(URL appiumURL) {
+		this.appiumURL = appiumURL;
+	}
 
 	public String getTestReportId() {
 

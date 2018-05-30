@@ -9,12 +9,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testobject.rest.api.appium.common.TestObject;
 import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
+
+import static org.junit.Assert.assertEquals;
 
 @TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 7)
 @RunWith(TestObjectAppiumSuite.class)
@@ -43,17 +44,18 @@ public class AppiumDriverCalculatorSuiteTestJUnit {
 	@Test
 	public void twoPlusTwoOperation() {
 
-		MobileElement buttonTwo = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
-		MobileElement buttonPlus = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/plus")));
-		MobileElement buttonEquals = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/equal")));
-		MobileElement resultField = (MobileElement)(driver.findElement(By.xpath("//android.widget.EditText[1]")));
+		MobileElement buttonTwo = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
+		MobileElement buttonPlus = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/plus")));
+		MobileElement buttonEquals = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/equal")));
+		By resultFieldBy = By.xpath("//android.widget.EditText[1]");
 
 		buttonTwo.click();
 		buttonPlus.click();
 		buttonTwo.click();
 		buttonEquals.click();
 
-		(new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
+		WebDriverWait wait = new WebDriverWait(driver, 30);
+		assertEquals(wait.until(d -> d.findElement(resultFieldBy).getText().trim()), "4");
 	}
 
 	@Test
