@@ -1,12 +1,12 @@
 package org.testobject.appium.junit;
 
-import io.appium.java_client.MobileElement;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -44,9 +44,9 @@ public class RemoteWebDriverCalculatorSuiteTestJUnit {
 	@Test
 	public void twoPlusTwoOperation() {
 
-		MobileElement buttonTwo = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
-		MobileElement buttonPlus = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/plus")));
-		MobileElement buttonEquals = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/equal")));
+		WebElement buttonTwo = driver.findElement(By.id("net.ludeke.calculator:id/digit2"));
+		WebElement buttonPlus = driver.findElement(By.id("net.ludeke.calculator:id/plus"));
+		WebElement buttonEquals = driver.findElement(By.id("net.ludeke.calculator:id/equal"));
 		By resultFieldBy = By.xpath("//android.widget.EditText[1]");
 
 		buttonTwo.click();
