@@ -1,7 +1,7 @@
 package org.testobject.appium.testng;
 
-import io.appium.java_client.MobileElement;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -46,9 +46,9 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWat
 
 		RemoteWebDriver remoteWebDriver = provider.getRemoteWebDriver();
 
-		MobileElement buttonTwo = (MobileElement) (remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/digit2")));
-		MobileElement buttonPlus = (MobileElement) (remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/plus")));
-		MobileElement buttonEquals = (MobileElement) (remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/equal")));
+		WebElement buttonTwo = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/digit2"));
+		WebElement buttonPlus = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/plus"));
+		WebElement buttonEquals = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/equal"));
 		By resultFieldBy = By.xpath("//android.widget.EditText[1]");
 
 		buttonTwo.click();
