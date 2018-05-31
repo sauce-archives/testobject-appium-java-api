@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -11,10 +12,7 @@ import org.testng.annotations.Test;
 import org.testobject.appium.TestObjectListenerProvider;
 import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
-import java.net.MalformedURLException;
 import java.net.URL;
-
-import static org.testng.Assert.assertEquals;
 
 @Listeners({ TestObjectTestNGTestResultWatcher.class })
 public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWatcherProvider {
@@ -22,7 +20,7 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWat
 	private TestObjectListenerProvider provider = TestObjectListenerProvider.newInstance();
 
 	@BeforeMethod
-	public void beforeTest() throws MalformedURLException {
+	public void beforeTest() {
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 
@@ -49,15 +47,14 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWat
 		WebElement buttonTwo = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/digit2"));
 		WebElement buttonPlus = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/plus"));
 		WebElement buttonEquals = remoteWebDriver.findElement(By.id("net.ludeke.calculator:id/equal"));
-		By resultFieldBy = By.xpath("//android.widget.EditText[1]");
+		WebElement resultField = remoteWebDriver.findElement(By.xpath("//android.widget.EditText[1]"));
 
 		buttonTwo.click();
 		buttonPlus.click();
 		buttonTwo.click();
 		buttonEquals.click();
 
-		WebDriverWait wait = new WebDriverWait(remoteWebDriver, 30);
-		assertEquals(wait.until(driver -> driver.findElement(resultFieldBy).getText().trim()), "4");
+		(new WebDriverWait(remoteWebDriver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
 
 	}
 

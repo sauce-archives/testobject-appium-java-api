@@ -5,6 +5,7 @@ import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
 import org.openqa.selenium.By;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
@@ -15,8 +16,6 @@ import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import static org.testng.Assert.assertEquals;
 
 @Listeners({ TestObjectTestNGTestResultWatcher.class })
 public class AppiumDriverCalculatorWatcherTestTestNG implements TestObjectWatcherProvider {
@@ -43,15 +42,14 @@ public class AppiumDriverCalculatorWatcherTestTestNG implements TestObjectWatche
 		MobileElement buttonTwo = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
 		MobileElement buttonPlus = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/plus")));
 		MobileElement buttonEquals = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/equal")));
-		By resultFieldBy = By.xpath("//android.widget.EditText[1]");
+		MobileElement resultField = (MobileElement) (driver.findElement(By.xpath("//android.widget.EditText[1]")));
 
 		buttonTwo.click();
 		buttonPlus.click();
 		buttonTwo.click();
 		buttonEquals.click();
 
-		WebDriverWait wait = new WebDriverWait(driver, 30);
-		assertEquals(wait.until(d -> d.findElement(resultFieldBy).getText().trim()), "4");
+		(new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
 
 	}
 
