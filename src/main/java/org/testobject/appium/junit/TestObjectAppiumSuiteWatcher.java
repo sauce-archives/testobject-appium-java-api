@@ -47,6 +47,16 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 	}
 
 	@Override
+	protected void skipped(org.junit.internal.AssumptionViolatedException e, Description description) {
+		reporter.processAndReportResult(false, TestParser.from(description));
+	}
+
+	@Override
+	protected void skipped(AssumptionViolatedException e, Description description) {
+		reporter.processAndReportResult(false, TestParser.from(description));
+	}
+
+	@Override
 	protected void finished(Description description) {
 		reporter.close();
 	}
