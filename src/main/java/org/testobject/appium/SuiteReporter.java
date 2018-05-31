@@ -1,6 +1,5 @@
 package org.testobject.appium;
 
-import jersey.repackaged.com.google.common.base.Optional;
 import org.testobject.rest.api.appium.common.data.SuiteReport;
 import org.testobject.rest.api.appium.common.data.Test;
 import org.testobject.rest.api.appium.common.data.TestReport;
@@ -38,12 +37,10 @@ public class SuiteReporter extends ResultReporter {
 	}
 
 	private void updateSuiteReport(SuiteReport suiteReport, Test test, boolean passed) {
-		Optional<TestReport.Id> testReportId = suiteReport.getTestReportId(test);
-		if (testReportId.orNull() == null) {
-			throw new IllegalArgumentException("unknown test " + test);
-		}
+		TestReport.Id testReportId = suiteReport.getTestReportId(test)
+				.orElseThrow(() -> new IllegalArgumentException("unknown test " + test));
 
-		new AppiumReportResource(client).finishAppiumTestReport(suiteId, suiteReport.getId(), testReportId.orNull(), new TestResult(passed));
+		new AppiumReportResource(client).finishAppiumTestReport(suiteId, suiteReport.getId(), testReportId, new TestResult(passed));
 	}
 
 	public SuiteReport suiteReport() {

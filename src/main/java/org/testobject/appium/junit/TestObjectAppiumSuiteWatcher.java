@@ -1,6 +1,6 @@
 package org.testobject.appium.junit;
 
-import jersey.repackaged.com.google.common.base.Optional;
+import org.junit.AssumptionViolatedException;
 import org.junit.rules.TestWatcher;
 import org.junit.runner.Description;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -9,7 +9,6 @@ import org.testobject.appium.TestObjectListenerProvider;
 import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 import org.testobject.rest.api.appium.common.data.SuiteReport;
 import org.testobject.rest.api.appium.common.data.Test;
-import org.testobject.rest.api.appium.common.data.TestReport;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -94,23 +93,13 @@ public class TestObjectAppiumSuiteWatcher extends TestWatcher {
 
 	public String getTestReportId() {
 
-		Optional<TestReport.Id> testReportId = reporter.suiteReport().getTestReportId(test);
-
-		if (testReportId.orNull() == null) {
-			throw new IllegalStateException("test report not present");
-		}
-
-		return testReportId.orNull().toString();
+		return reporter.suiteReport().getTestReportId(test)
+				.orElseThrow(() -> new IllegalStateException("test report not present")).toString();
 	}
 
 	public String getTestDeviceId() {
-		Optional<String> testDeviceId = reporter.suiteReport().getTestDeviceId(test);
-
-		if (testDeviceId.orNull() == null) {
-			throw new IllegalStateException("test device not present");
-		}
-
-		return testDeviceId.orNull();
+		return reporter.suiteReport().getTestDeviceId(test)
+				.orElseThrow(() -> new IllegalStateException("test device not present"));
 	}
 
 	public String getApiKey() {
