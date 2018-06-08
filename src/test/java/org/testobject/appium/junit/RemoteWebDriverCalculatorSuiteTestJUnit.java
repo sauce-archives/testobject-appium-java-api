@@ -21,40 +21,40 @@ import java.net.MalformedURLException;
 @Ignore // remove @Ignore to run this test
 public class RemoteWebDriverCalculatorSuiteTestJUnit {
 
-    @Rule
-    public TestObjectAppiumSuiteWatcher watcher = new TestObjectAppiumSuiteWatcher();
+	@Rule
+	public TestObjectAppiumSuiteWatcher watcher = new TestObjectAppiumSuiteWatcher();
 
-    private RemoteWebDriver driver;
+	private RemoteWebDriver driver;
 
-    @Before
-    public void setup() throws MalformedURLException {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+	@Before
+	public void setup() throws MalformedURLException {
+		DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, watcher.getApiKey());
-        capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID, watcher.getTestReportId());
+		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, watcher.getApiKey());
+		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_TEST_REPORT_ID, watcher.getTestReportId());
 
-        driver = new RemoteWebDriver(watcher.getTestObjectOrLocalAppiumEndpointURL(), capabilities);
-        watcher.setRemoteWebDriver(driver);
+		driver = new RemoteWebDriver(watcher.getTestObjectOrLocalAppiumEndpointURL(), capabilities);
+		watcher.setRemoteWebDriver(driver);
 
-        System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
-        System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
-    }
+		System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
+		System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
+	}
 
-    @Test
-    public void twoPlusTwoOperation() {
+	@Test
+	public void twoPlusTwoOperation() {
 
-        WebElement buttonTwo = driver.findElement(By.id("net.ludeke.calculator:id/digit2"));
-        WebElement buttonPlus = driver.findElement(By.id("net.ludeke.calculator:id/plus"));
-        WebElement buttonEquals = driver.findElement(By.id("net.ludeke.calculator:id/equal"));
-        WebElement resultField = driver.findElement(By.xpath("//android.widget.EditText[1]"));
+		WebElement buttonTwo = driver.findElement(By.id("net.ludeke.calculator:id/digit2"));
+		WebElement buttonPlus = driver.findElement(By.id("net.ludeke.calculator:id/plus"));
+		WebElement buttonEquals = driver.findElement(By.id("net.ludeke.calculator:id/equal"));
+		WebElement resultField = driver.findElement(By.xpath("//android.widget.EditText[1]"));
 
-        buttonTwo.click();
-        buttonPlus.click();
-        buttonTwo.click();
-        buttonEquals.click();
+		buttonTwo.click();
+		buttonPlus.click();
+		buttonTwo.click();
+		buttonEquals.click();
 
-        (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
+		(new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
 
-    }
+	}
 
 }

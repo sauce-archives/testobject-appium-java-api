@@ -15,8 +15,8 @@ import org.testobject.rest.api.appium.common.TestObject;
 import org.testobject.rest.api.appium.common.data.DataCenterSuite;
 import org.testobject.rest.api.appium.common.data.SuiteReport;
 import org.testobject.rest.api.appium.common.data.Test;
-import org.testobject.rest.api.resource.AppiumSuiteReportResource;
-import org.testobject.rest.api.resource.AppiumSuiteResource;
+import org.testobject.rest.api.resource.v2.AppiumReportResource;
+import org.testobject.rest.api.resource.v2.AppiumSuiteResource;
 
 import java.net.URL;
 import java.util.*;
@@ -75,7 +75,7 @@ public class TestObjectAppiumSuite extends Suite {
 		private final ExecutorService executor;
 
 		public ThreadPoolScheduler(int numberOfThreads, int timeout, TimeUnit timeoutUnit) {
-			if(numberOfThreads < 1) {
+			if (numberOfThreads < 1) {
 				throw new RuntimeException("Cannot make a thread pool with " + numberOfThreads + " threads");
 			}
 			this.timeout = timeout;
@@ -131,7 +131,9 @@ public class TestObjectAppiumSuite extends Suite {
 		} else {
 
 			Optional<String> endpointFromEnvironment = Env.getApiEndpoint();
-			String endpointFromConfig = config.testObjectApiEndpoint().isEmpty() ? TESTOBJECT_API_ENDPOINT.toString() : config.testObjectApiEndpoint();
+			String endpointFromConfig = config.testObjectApiEndpoint().isEmpty() ?
+					TESTOBJECT_API_ENDPOINT.toString() :
+					config.testObjectApiEndpoint();
 			String testObjectApiEndpoint = endpointFromEnvironment.orElse(endpointFromConfig);
 
 			Optional<String> apiKeyFromEnvironment = Env.getApiKey();
@@ -141,7 +143,8 @@ public class TestObjectAppiumSuite extends Suite {
 			testObjectSuiteId = suiteIdFromEnvironment.map(Long::parseLong).orElseGet(config::testObjectSuiteId);
 
 			Optional<String> appIdFromEnvironment = Env.getAppId();
-			Optional<String> appIdFromAnnotation = config.testObjectAppId() != 0 ? Optional.of(Long.toString(config.testObjectAppId())) : Optional.empty();
+			Optional<String> appIdFromAnnotation =
+					config.testObjectAppId() != 0 ? Optional.of(Long.toString(config.testObjectAppId())) : Optional.empty();
 			testObjectAppId = appIdFromEnvironment.isPresent() ? appIdFromEnvironment : appIdFromAnnotation;
 
 			Optional<String> timeoutFromEnvironment = Env.getTimeout();
@@ -150,7 +153,7 @@ public class TestObjectAppiumSuite extends Suite {
 			this.client = RestClient.Builder.createClient()
 					.withUrl(testObjectApiEndpoint)
 					.withToken(testObjectApiKey)
-					.path(RestClient.REST_APPIUM_PATH)
+					.path(RestClient.REST)
 					.build();
 
 			Set<DataCenterSuite> dataCenterSuites = getDataCenterSuites();
@@ -172,13 +175,13 @@ public class TestObjectAppiumSuite extends Suite {
 
 		} else {
 
-			AppiumSuiteReportResource suiteReportResource = new AppiumSuiteReportResource(client);
+			AppiumReportResource appiumReportResource = new AppiumReportResource(client);
 			try {
-				this.suiteReport = suiteReportResource.startSuiteReport(testObjectSuiteId, testObjectAppId, tests);
+				this.suiteReport = appiumReportResource.startAppiumSuite(testObjectSuiteId, testObjectAppId, tests);
 				try {
 					super.run(notifier);
 				} finally {
-					suiteReportResource.finishSuiteReport(testObjectSuiteId, suiteReport.getId());
+					appiumReportResource.finishAppiumSuite(testObjectSuiteId, suiteReport.getId());
 				}
 			} finally {
 				client.close();
@@ -202,12 +205,12 @@ public class TestObjectAppiumSuite extends Suite {
 
 	private Set<DataCenterSuite> getDataCenterSuites() {
 		AppiumSuiteResource suiteReportResource = new AppiumSuiteResource(client);
-		return suiteReportResource.readDataCenterSuites(testObjectSuiteId);
+		return suiteReportResource.readDeviceDescriptorIds(testObjectSuiteId);
 	}
 
 	private List<Runner> toRunners(Class<?> clazz, Collection<DataCenterSuite> dataCenterSuites) throws InitializationError {
 
-		List<Runner> runners = new LinkedList<Runner>();
+		List<Runner> runners = new LinkedList<>();
 		for (DataCenterSuite dataCenterSuite : dataCenterSuites) {
 			URL appiumURL = dataCenterSuite.getDataCenterURL();
 			String dataCenterId = dataCenterSuite.dataCenterId;
@@ -216,14 +219,14 @@ public class TestObjectAppiumSuite extends Suite {
 			}
 		}
 
-		if(runners.size() < 1) {
+		if (runners.size() < 1) {
 			throw new RuntimeException("No devices were specified for this suite");
 		}
 		return runners;
 	}
 
 	private static Set<Test> getTests(Description description) {
-		Set<Test> tests = new HashSet<Test>();
+		Set<Test> tests = new HashSet<>();
 		for (Description childDescription : description.getChildren()) {
 			for (Description testDescription : childDescription.getChildren()) {
 				tests.add(TestParser.from(testDescription));

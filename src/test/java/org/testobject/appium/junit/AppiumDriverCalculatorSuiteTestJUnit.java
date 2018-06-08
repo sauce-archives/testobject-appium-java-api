@@ -16,7 +16,7 @@ import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
 import java.net.MalformedURLException;
 
-@TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 7)
+@TestObject(testObjectApiKey = "YOUR_API_KEY", testObjectSuiteId = 6)
 @RunWith(TestObjectAppiumSuite.class)
 //@Ignore // remove @Ignore to run this test
 public class AppiumDriverCalculatorSuiteTestJUnit {
@@ -43,10 +43,10 @@ public class AppiumDriverCalculatorSuiteTestJUnit {
 	@Test
 	public void twoPlusTwoOperation() {
 
-		MobileElement buttonTwo = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
-		MobileElement buttonPlus = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/plus")));
-		MobileElement buttonEquals = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/equal")));
-		MobileElement resultField = (MobileElement)(driver.findElement(By.xpath("//android.widget.EditText[1]")));
+		MobileElement buttonTwo = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
+		MobileElement buttonPlus = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/plus")));
+		MobileElement buttonEquals = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/equal")));
+		MobileElement resultField = (MobileElement) (driver.findElement(By.xpath("//android.widget.EditText[1]")));
 
 		buttonTwo.click();
 		buttonPlus.click();

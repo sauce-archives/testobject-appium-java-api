@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 import org.testobject.appium.TestObjectListenerProvider;
 import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 @Listeners({ TestObjectTestNGTestResultWatcher.class })
@@ -21,13 +20,14 @@ public class RemoteWebDriverCalculatorWatcherTestTestNG implements TestObjectWat
 	private TestObjectListenerProvider provider = TestObjectListenerProvider.newInstance();
 
 	@BeforeMethod
-	public void beforeTest() throws MalformedURLException {
+	public void beforeTest() {
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 
 		capabilities.setCapability("testobject_api_key", "YOUR_API_KEY");
 		capabilities.setCapability("testobject_app_id", "1");
 		capabilities.setCapability("testobject_device", "YOUR_DEVICE");
+		capabilities.setCapability("platformName", "Android or iOS");
 
 		URL url = TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT;
 		provider.setDriver(new RemoteWebDriver(url, capabilities));

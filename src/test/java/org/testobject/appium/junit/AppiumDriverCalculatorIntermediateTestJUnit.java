@@ -14,39 +14,39 @@ import org.testobject.rest.api.appium.common.TestObjectCapabilities;
 
 public class AppiumDriverCalculatorIntermediateTestJUnit {
 
-    @Rule
-    public TestObjectTestResultWatcher watcher = new TestObjectTestResultWatcher();
+	@Rule
+	public TestObjectTestResultWatcher watcher = new TestObjectTestResultWatcher();
 
-    private AppiumDriver driver;
+	private AppiumDriver driver;
 
-    @Before
-    public void setup() {
-        DesiredCapabilities capabilities = new DesiredCapabilities();
+	@Before
+	public void setup() {
+		DesiredCapabilities capabilities = new DesiredCapabilities();
 
-        capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, "YOUR_API_KEY");
-        capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_DEVICE, "YOUR_DEVICE");
+		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_API_KEY, "YOUR_API_KEY");
+		capabilities.setCapability(TestObjectCapabilities.TESTOBJECT_DEVICE, "YOUR_DEVICE");
 
-        driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
-        watcher.setRemoteWebDriver(driver);
+		driver = new AndroidDriver(TestObjectCapabilities.TESTOBJECT_APPIUM_ENDPOINT, capabilities);
+		watcher.setRemoteWebDriver(driver);
 
-        System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
-        System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
-    }
+		System.out.println("Test live view: " + driver.getCapabilities().getCapability("testobject_test_live_view_url"));
+		System.out.println("Test report: " + driver.getCapabilities().getCapability("testobject_test_report_url"));
+	}
 
-    @Test
-    public void twoPlusTwoOperation() {
+	@Test
+	public void twoPlusTwoOperation() {
 
-        MobileElement buttonTwo = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
-        MobileElement buttonPlus = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/plus")));
-        MobileElement buttonEquals = (MobileElement)(driver.findElement(By.id("net.ludeke.calculator:id/equal")));
-        MobileElement resultField = (MobileElement)(driver.findElement(By.xpath("//android.widget.EditText[1]")));
+		MobileElement buttonTwo = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/digit2")));
+		MobileElement buttonPlus = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/plus")));
+		MobileElement buttonEquals = (MobileElement) (driver.findElement(By.id("net.ludeke.calculator:id/equal")));
+		MobileElement resultField = (MobileElement) (driver.findElement(By.xpath("//android.widget.EditText[1]")));
 
-        buttonTwo.click();
-        buttonPlus.click();
-        buttonTwo.click();
-        buttonEquals.click();
+		buttonTwo.click();
+		buttonPlus.click();
+		buttonTwo.click();
+		buttonEquals.click();
 
-        (new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
-    }
+		(new WebDriverWait(driver, 30)).until(ExpectedConditions.textToBePresentInElement(resultField, "4"));
+	}
 
 }
