@@ -100,9 +100,6 @@ public class TestObjectAppiumSuite extends Suite {
 
 	private static final List<Runner> NO_RUNNERS = Collections.emptyList();
 
-	private static final int timeoutDefault = 60;
-	private static final TimeUnit timeunitDefault = TimeUnit.MINUTES;
-
 	private final RestClient client;
 	private final List<Runner> perDeviceRunners;
 
@@ -126,8 +123,6 @@ public class TestObjectAppiumSuite extends Suite {
 			this.client = null;
 			this.perDeviceRunners = new LinkedList<Runner>();
 			this.perDeviceRunners.add(new PerDeviceRunner(clazz, null, null, null));
-
-			this.setScheduler(new ThreadPoolScheduler(1, timeoutDefault, timeunitDefault));
 		} else {
 
 			Optional<String> endpointFromEnvironment = Env.getApiEndpoint();
@@ -147,9 +142,6 @@ public class TestObjectAppiumSuite extends Suite {
 					config.testObjectAppId() != 0 ? Optional.of(Long.toString(config.testObjectAppId())) : Optional.empty();
 			testObjectAppId = appIdFromEnvironment.isPresent() ? appIdFromEnvironment : appIdFromAnnotation;
 
-			Optional<String> timeoutFromEnvironment = Env.getTimeout();
-			int testObjectTimeout = timeoutFromEnvironment.map(Integer::parseInt).orElseGet(config::timeout);
-
 			this.client = RestClient.Builder.createClient()
 					.withUrl(testObjectApiEndpoint)
 					.withToken(testObjectApiKey)
@@ -159,10 +151,18 @@ public class TestObjectAppiumSuite extends Suite {
 			Set<DataCenterSuite> dataCenterSuites = getDataCenterSuites();
 
 			this.perDeviceRunners = toRunners(clazz, dataCenterSuites);
-
-			this.setScheduler(new ThreadPoolScheduler(perDeviceRunners.size(), testObjectTimeout, config.timeoutUnit()));
-
 		}
+		runAllDevicesAtOnce(config);
+	}
+
+	private void runAllDevicesAtOnce(TestObject config) {
+		int numRunners = perDeviceRunners.size();
+		int timeout = Env.getTimeout()
+			.map(Integer::parseInt)
+			.orElseGet(config::timeout);
+
+		setScheduler(
+			new ThreadPoolScheduler(numRunners, timeout, config.timeoutUnit()));
 	}
 
 	@Override
